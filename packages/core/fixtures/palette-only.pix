@@ -1,0 +1,5 @@
+palette nes {
+  black k #000000
+  white w #ffffff
+  red   r #ff0000
+}

@@ -1,0 +1,6 @@
+palette nes {
+  black k #000000
+  white w #ffffff
+  skin  s #fcc9b9
+  hair  h #4a2c1a
+}

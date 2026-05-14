@@ -1,0 +1,17 @@
+palette nes {
+  black k #000000
+  white w #ffffff
+  skin  s #fcc9b9
+  hair  h #4a2c1a
+}
+
+sprite hero 8x8 palette=nes {
+  . . h h h h . .
+  . h s s s s h .
+  . h s k s k s .
+  . h s s s s h .
+  . . s s s s . .
+  . . s s s s . .
+  . . s . . s . .
+  . . s . . s . .
+}
