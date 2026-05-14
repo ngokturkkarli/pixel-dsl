@@ -1,16 +1,22 @@
 import { CstParser } from "chevrotain";
 import {
 	allTokens,
+	Circle,
 	Comma,
 	Dimensions,
 	Dot,
 	Equals,
+	Fill,
 	HexColor,
 	Identifier,
+	Integer,
 	LBrace,
+	Line,
 	LParen,
 	Palette,
+	Pixel,
 	RBrace,
+	Rect,
 	RParen,
 	Slash,
 	Sprite,
@@ -59,6 +65,7 @@ class PixelParser extends CstParser {
 		this.CONSUME(LBrace);
 		this.MANY(() => {
 			this.OR([
+				{ ALT: () => this.SUBRULE(this.op) },
 				{ ALT: () => this.SUBRULE(this.cell) },
 				{ ALT: () => this.CONSUME(Slash) },
 			]);
@@ -104,6 +111,62 @@ class PixelParser extends CstParser {
 	});
 
 	private cell = this.RULE("cell", () => {
+		this.OR([
+			{ ALT: () => this.CONSUME(Identifier) },
+			{ ALT: () => this.CONSUME(HexColor) },
+			{ ALT: () => this.CONSUME(Dot) },
+		]);
+	});
+
+	private op = this.RULE("op", () => {
+		this.OR([
+			{ ALT: () => this.SUBRULE(this.fillOp) },
+			{ ALT: () => this.SUBRULE(this.rectOp) },
+			{ ALT: () => this.SUBRULE(this.pixelOp) },
+			{ ALT: () => this.SUBRULE(this.lineOp) },
+			{ ALT: () => this.SUBRULE(this.circleOp) },
+		]);
+	});
+
+	private fillOp = this.RULE("fillOp", () => {
+		this.CONSUME(Fill);
+		this.SUBRULE(this.opValue);
+	});
+
+	private rectOp = this.RULE("rectOp", () => {
+		this.CONSUME(Rect);
+		this.SUBRULE(this.coord, { LABEL: "from" });
+		this.SUBRULE2(this.coord, { LABEL: "to" });
+		this.SUBRULE(this.opValue);
+	});
+
+	private pixelOp = this.RULE("pixelOp", () => {
+		this.CONSUME(Pixel);
+		this.SUBRULE(this.coord, { LABEL: "at" });
+		this.SUBRULE(this.opValue);
+	});
+
+	private lineOp = this.RULE("lineOp", () => {
+		this.CONSUME(Line);
+		this.SUBRULE(this.coord, { LABEL: "from" });
+		this.SUBRULE2(this.coord, { LABEL: "to" });
+		this.SUBRULE(this.opValue);
+	});
+
+	private circleOp = this.RULE("circleOp", () => {
+		this.CONSUME(Circle);
+		this.SUBRULE(this.coord, { LABEL: "center" });
+		this.CONSUME(Integer, { LABEL: "radius" });
+		this.SUBRULE(this.opValue);
+	});
+
+	private coord = this.RULE("coord", () => {
+		this.CONSUME(Integer, { LABEL: "x" });
+		this.CONSUME(Comma);
+		this.CONSUME2(Integer, { LABEL: "y" });
+	});
+
+	private opValue = this.RULE("opValue", () => {
 		this.OR([
 			{ ALT: () => this.CONSUME(Identifier) },
 			{ ALT: () => this.CONSUME(HexColor) },

@@ -113,6 +113,37 @@ describe("Visitor (source → AST)", () => {
 		});
 	});
 
+	it("builds shape ops on a sprite body", () => {
+		const ast = parseOk(
+			"palette p { red r #f00 } sprite x 4x4 palette=p { fill . rect 0,0 3,3 r pixel 1,1 #ff0 line 0,0 3,3 r circle 2,2 1 r }",
+		);
+		const s = ast.sprites[0];
+		expect(s.cells).toEqual([]);
+		expect(s.ops).toHaveLength(5);
+		expect(s.ops[0]).toMatchObject({ type: "FillOp" });
+		expect(s.ops[1]).toMatchObject({
+			type: "RectOp",
+			x0: 0,
+			y0: 0,
+			x1: 3,
+			y1: 3,
+		});
+		expect(s.ops[2]).toMatchObject({ type: "PixelOp", x: 1, y: 1 });
+		expect(s.ops[3]).toMatchObject({
+			type: "LineOp",
+			x0: 0,
+			y0: 0,
+			x1: 3,
+			y1: 3,
+		});
+		expect(s.ops[4]).toMatchObject({
+			type: "CircleOp",
+			cx: 2,
+			cy: 2,
+			r: 1,
+		});
+	});
+
 	it("returns null ast and an error Diagnostic on parse failure", () => {
 		const { ast, errors } = parse("palette nes { black k #000000");
 		expect(ast).toBeNull();

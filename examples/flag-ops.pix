@@ -1,0 +1,18 @@
+palette flag {
+  black k #050505
+  white w #ffffff
+  red   r #c0392b
+}
+
+sprite jolly 16x12 palette=flag {
+  fill k
+  rect 1,1 14,10 k
+  circle 8,5 3 w
+  pixel 7,4 k
+  pixel 9,4 k
+  pixel 8,5 k
+  rect 6,7 9,7 w
+  line 4,9 11,11 w
+  line 11,9 4,11 w
+  rect 5,11 10,11 r
+}

@@ -33,6 +33,54 @@ export interface SpriteDecl {
 	height: number;
 	palette?: string;
 	cells: Cell[];
+	ops: SpriteOp[];
+	loc: Location;
+}
+
+export type SpriteOp = FillOp | RectOp | PixelOp | LineOp | CircleOp;
+
+export type OpValue = PaletteRef | HexValue | TransparentCell;
+
+export interface FillOp {
+	type: "FillOp";
+	value: OpValue;
+	loc: Location;
+}
+
+export interface RectOp {
+	type: "RectOp";
+	x0: number;
+	y0: number;
+	x1: number;
+	y1: number;
+	value: OpValue;
+	loc: Location;
+}
+
+export interface PixelOp {
+	type: "PixelOp";
+	x: number;
+	y: number;
+	value: OpValue;
+	loc: Location;
+}
+
+export interface LineOp {
+	type: "LineOp";
+	x0: number;
+	y0: number;
+	x1: number;
+	y1: number;
+	value: OpValue;
+	loc: Location;
+}
+
+export interface CircleOp {
+	type: "CircleOp";
+	cx: number;
+	cy: number;
+	r: number;
+	value: OpValue;
 	loc: Location;
 }
 

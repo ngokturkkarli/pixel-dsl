@@ -117,4 +117,34 @@ describe("Lexer", () => {
 			"Identifier",
 		]);
 	});
+
+	it("tokenizes shape op keywords with longer_alt to Identifier", () => {
+		expect(typesAndImages("fill rect pixel line circle")).toEqual([
+			{ type: "Fill", image: "fill" },
+			{ type: "Rect", image: "rect" },
+			{ type: "Pixel", image: "pixel" },
+			{ type: "Line", image: "line" },
+			{ type: "Circle", image: "circle" },
+		]);
+		expect(typesAndImages("fillX rectFoo")).toEqual([
+			{ type: "Identifier", image: "fillX" },
+			{ type: "Identifier", image: "rectFoo" },
+		]);
+	});
+
+	it("tokenizes integers and keeps Dimensions intact", () => {
+		expect(typesAndImages("rect 2,0 5,3 k")).toEqual([
+			{ type: "Rect", image: "rect" },
+			{ type: "Integer", image: "2" },
+			{ type: "Comma", image: "," },
+			{ type: "Integer", image: "0" },
+			{ type: "Integer", image: "5" },
+			{ type: "Comma", image: "," },
+			{ type: "Integer", image: "3" },
+			{ type: "Identifier", image: "k" },
+		]);
+		expect(typesAndImages("8x8")).toEqual([
+			{ type: "Dimensions", image: "8x8" },
+		]);
+	});
 });

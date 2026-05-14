@@ -22,6 +22,11 @@ export const Dimensions = createToken({
 	pattern: /\d+x\d+/,
 });
 
+export const Integer = createToken({
+	name: "Integer",
+	pattern: /\d+/,
+});
+
 export const Identifier = createToken({
 	name: "Identifier",
 	pattern: /[a-zA-Z_][a-zA-Z0-9_]*/,
@@ -36,6 +41,36 @@ export const Palette = createToken({
 export const Sprite = createToken({
 	name: "Sprite",
 	pattern: /sprite/,
+	longer_alt: Identifier,
+});
+
+export const Fill = createToken({
+	name: "Fill",
+	pattern: /fill/,
+	longer_alt: Identifier,
+});
+
+export const Rect = createToken({
+	name: "Rect",
+	pattern: /rect/,
+	longer_alt: Identifier,
+});
+
+export const Pixel = createToken({
+	name: "Pixel",
+	pattern: /pixel/,
+	longer_alt: Identifier,
+});
+
+export const Line = createToken({
+	name: "Line",
+	pattern: /line/,
+	longer_alt: Identifier,
+});
+
+export const Circle = createToken({
+	name: "Circle",
+	pattern: /circle/,
 	longer_alt: Identifier,
 });
 
@@ -55,8 +90,14 @@ export const allTokens = [
 	LineComment,
 	HexColor,
 	Dimensions,
+	Integer,
 	Palette,
 	Sprite,
+	Fill,
+	Rect,
+	Pixel,
+	Line,
+	Circle,
 	Identifier,
 	Dot,
 	Slash,

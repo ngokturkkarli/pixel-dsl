@@ -4,12 +4,16 @@
 	"description": "Command-line interface for Pixel-DSL",
 	"type": "module",
 	"bin": {
-		"pixel-dsl": "src/index.ts"
+		"pixel-dsl": "./dist/index.js"
 	},
+	"files": [
+		"dist"
+	],
 	"scripts": {
+		"build": "tsc -b && chmod +x dist/index.js",
 		"dev": "tsx src/index.ts",
 		"test": "vitest",
-		"typecheck": "tsc -p tsconfig.json --noEmit",
+		"typecheck": "tsc -b",
 		"lint": "biome lint --write",
 		"format": "biome check --write"
 	},

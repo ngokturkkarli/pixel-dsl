@@ -1,5 +1,12 @@
 import { PNG } from "pngjs";
-import type { Cell, Program, SpriteDecl } from "./ast.js";
+import type {
+	Cell,
+	Location,
+	OpValue,
+	Program,
+	SpriteDecl,
+	SpriteOp,
+} from "./ast.js";
 import type { Diagnostic } from "./errors.js";
 import {
 	parseHex,
@@ -119,6 +126,120 @@ function resolveCell(
 	return rgba;
 }
 
+function resolveOpValue(
+	v: OpValue,
+	palette: ResolvedPalette | undefined,
+	spriteName: string,
+): Rgba {
+	// OpValue is the same shape as Cell — reuse resolveCell.
+	return resolveCell(v as Cell, palette, spriteName);
+}
+
+function applyOp(
+	pixels: Rgba[],
+	width: number,
+	height: number,
+	op: SpriteOp,
+	color: Rgba,
+	sprite: SpriteDecl,
+) {
+	const setPx = (x: number, y: number) => {
+		if (x < 0 || y < 0 || x >= width || y >= height) return;
+		pixels[y * width + x] = color;
+	};
+	switch (op.type) {
+		case "FillOp":
+			for (let i = 0; i < pixels.length; i++) pixels[i] = color;
+			return;
+		case "PixelOp":
+			setPx(op.x, op.y);
+			return;
+		case "RectOp": {
+			const xMin = Math.min(op.x0, op.x1);
+			const xMax = Math.max(op.x0, op.x1);
+			const yMin = Math.min(op.y0, op.y1);
+			const yMax = Math.max(op.y0, op.y1);
+			for (let y = yMin; y <= yMax; y++) {
+				for (let x = xMin; x <= xMax; x++) setPx(x, y);
+			}
+			return;
+		}
+		case "LineOp": {
+			// Bresenham's line algorithm
+			let x0 = op.x0;
+			let y0 = op.y0;
+			const x1 = op.x1;
+			const y1 = op.y1;
+			const dx = Math.abs(x1 - x0);
+			const dy = -Math.abs(y1 - y0);
+			const sx = x0 < x1 ? 1 : -1;
+			const sy = y0 < y1 ? 1 : -1;
+			let err = dx + dy;
+			while (true) {
+				setPx(x0, y0);
+				if (x0 === x1 && y0 === y1) break;
+				const e2 = 2 * err;
+				if (e2 >= dy) {
+					err += dy;
+					x0 += sx;
+				}
+				if (e2 <= dx) {
+					err += dx;
+					y0 += sy;
+				}
+			}
+			return;
+		}
+		case "CircleOp": {
+			if (op.r < 0) {
+				throw new RenderError(
+					`circle radius must be non-negative (got ${op.r}).`,
+					opDiagnostic(
+						"render.bad_radius",
+						`Circle radius ${op.r} is negative.`,
+						op.loc,
+						sprite.name,
+					),
+				);
+			}
+			const r2 = op.r * op.r;
+			for (let dy = -op.r; dy <= op.r; dy++) {
+				for (let dx = -op.r; dx <= op.r; dx++) {
+					if (dx * dx + dy * dy <= r2) setPx(op.cx + dx, op.cy + dy);
+				}
+			}
+			return;
+		}
+	}
+}
+
+function opDiagnostic(
+	code: string,
+	message: string,
+	loc: Location,
+	spriteName: string,
+): Diagnostic {
+	return {
+		code,
+		severity: "error",
+		message: `Sprite \`${spriteName}\`: ${message}`,
+		loc,
+	};
+}
+
+function renderOps(
+	sprite: SpriteDecl,
+	palette: ResolvedPalette | undefined,
+): Rgba[] {
+	const pixels: Rgba[] = new Array(sprite.width * sprite.height);
+	for (let i = 0; i < pixels.length; i++) pixels[i] = TRANSPARENT;
+	for (const op of sprite.ops) {
+		const color = resolveOpValue(op.value, palette, sprite.name);
+		applyOp(pixels, sprite.width, sprite.height, op, color, sprite);
+	}
+	return pixels;
+}
+
 function nearestNeighbor(
 	src: Rgba[],
 	width: number,
@@ -161,19 +282,38 @@ export function render(program: Program, opts: RenderOpts = {}): Uint8Array {
 	const sprite = findSprite(program, opts.spriteName);
 	const palette = pickPalette(sprite, palettes);
 	const expected = sprite.width * sprite.height;
-	if (sprite.cells.length !== expected) {
+
+	if (sprite.cells.length > 0 && sprite.ops.length > 0) {
 		throw new RenderError(
-			`Sprite \`${sprite.name}\` declares ${sprite.width}x${sprite.height} (${expected} cells) but has ${sprite.cells.length}.`,
+			`Sprite \`${sprite.name}\` mixes a cell grid with ops; choose one mode.`,
 			{
-				code: "render.cell_count_mismatch",
+				code: "render.mixed_body",
 				severity: "error",
-				message: `Sprite \`${sprite.name}\` declares ${expected} cells but has ${sprite.cells.length}.`,
+				message: `Sprite \`${sprite.name}\` mixes a cell grid with shape ops.`,
 				loc: sprite.loc,
+				hint: "A sprite body is either a cell grid or a sequence of ops, not both.",
 			},
 		);
 	}
 
-	const pixels = sprite.cells.map((c) => resolveCell(c, palette, sprite.name));
+	let pixels: Rgba[];
+	if (sprite.ops.length > 0) {
+		pixels = renderOps(sprite, palette);
+	} else {
+		if (sprite.cells.length !== expected) {
+			throw new RenderError(
+				`Sprite \`${sprite.name}\` declares ${sprite.width}x${sprite.height} (${expected} cells) but has ${sprite.cells.length}.`,
+				{
+					code: "render.cell_count_mismatch",
+					severity: "error",
+					message: `Sprite \`${sprite.name}\` declares ${expected} cells but has ${sprite.cells.length}.`,
+					loc: sprite.loc,
+				},
+			);
+		}
+		pixels = sprite.cells.map((c) => resolveCell(c, palette, sprite.name));
+	}
+
 	const scaled = nearestNeighbor(pixels, sprite.width, sprite.height, scale);
 
 	const outW = sprite.width * scale;

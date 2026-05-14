@@ -104,4 +104,86 @@ describe("render", () => {
 		const actual = decodePNG(render(ast));
 		expect(actual.data[3]).toBe(0);
 	});
+
+	describe("shape ops", () => {
+		function pixelAt(data: Buffer, width: number, x: number, y: number) {
+			const i = (y * width + x) * 4;
+			return [data[i], data[i + 1], data[i + 2], data[i + 3]];
+		}
+
+		it("fills the entire sprite", () => {
+			const ast = programOf("sprite x 2x2 { fill #ff0000 }");
+			const png = decodePNG(render(ast));
+			for (let i = 0; i < 4; i++) {
+				expect(pixelAt(png.data, 2, i % 2, Math.floor(i / 2))).toEqual([
+					255, 0, 0, 255,
+				]);
+			}
+		});
+
+		it("draws a rect inclusive of both corners", () => {
+			const ast = programOf("sprite x 4x4 { fill . rect 1,1 2,2 #00ff00 }");
+			const png = decodePNG(render(ast));
+			expect(pixelAt(png.data, 4, 0, 0)).toEqual([0, 0, 0, 0]); // transparent outside
+			expect(pixelAt(png.data, 4, 1, 1)).toEqual([0, 255, 0, 255]);
+			expect(pixelAt(png.data, 4, 2, 2)).toEqual([0, 255, 0, 255]);
+			expect(pixelAt(png.data, 4, 3, 3)).toEqual([0, 0, 0, 0]);
+		});
+
+		it("draws a single pixel with `pixel`", () => {
+			const ast = programOf("sprite x 3x3 { fill . pixel 1,1 #0000ff }");
+			const png = decodePNG(render(ast));
+			expect(pixelAt(png.data, 3, 1, 1)).toEqual([0, 0, 255, 255]);
+			expect(pixelAt(png.data, 3, 0, 0)).toEqual([0, 0, 0, 0]);
+		});
+
+		it("draws a diagonal line via Bresenham", () => {
+			const ast = programOf("sprite x 4x4 { fill . line 0,0 3,3 #ffffff }");
+			const png = decodePNG(render(ast));
+			expect(pixelAt(png.data, 4, 0, 0)).toEqual([255, 255, 255, 255]);
+			expect(pixelAt(png.data, 4, 1, 1)).toEqual([255, 255, 255, 255]);
+			expect(pixelAt(png.data, 4, 2, 2)).toEqual([255, 255, 255, 255]);
+			expect(pixelAt(png.data, 4, 3, 3)).toEqual([255, 255, 255, 255]);
+			expect(pixelAt(png.data, 4, 0, 3)).toEqual([0, 0, 0, 0]);
+		});
+
+		it("draws a filled circle", () => {
+			const ast = programOf("sprite x 7x7 { fill . circle 3,3 2 #ff8800 }");
+			const png = decodePNG(render(ast));
+			// center filled
+			expect(pixelAt(png.data, 7, 3, 3)).toEqual([255, 136, 0, 255]);
+			// edge of circle (radius 2 from center)
+			expect(pixelAt(png.data, 7, 5, 3)).toEqual([255, 136, 0, 255]);
+			expect(pixelAt(png.data, 7, 3, 5)).toEqual([255, 136, 0, 255]);
+			// far corner — outside
+			expect(pixelAt(png.data, 7, 0, 0)).toEqual([0, 0, 0, 0]);
+		});
+
+		it("ops paint in order — later ops overwrite earlier", () => {
+			const ast = programOf("sprite x 2x2 { fill #ff0000 fill #00ff00 }");
+			const png = decodePNG(render(ast));
+			expect(pixelAt(png.data, 2, 0, 0)).toEqual([0, 255, 0, 255]);
+		});
+
+		it("clips ops outside sprite bounds silently", () => {
+			const ast = programOf(
+				"sprite x 2x2 { fill . pixel 10,10 #ff0000 rect 0,0 99,99 #00ff00 }",
+			);
+			const png = decodePNG(render(ast));
+			// pixel 10,10 silently dropped (out of bounds)
+			// rect 0..99 clips to the 2x2 sprite — fills everything green
+			expect(pixelAt(png.data, 2, 0, 0)).toEqual([0, 255, 0, 255]);
+			expect(pixelAt(png.data, 2, 1, 1)).toEqual([0, 255, 0, 255]);
+		});
+
+		it("throws RenderError when a sprite mixes cells and ops", () => {
+			const ast = programOf("sprite x 2x2 { . . . . fill #ff0000 }");
+			try {
+				render(ast);
+				throw new Error("expected throw");
+			} catch (e) {
+				expect((e as RenderError).diagnostic.code).toBe("render.mixed_body");
+			}
+		});
+	});
 });

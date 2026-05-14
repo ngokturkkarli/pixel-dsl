@@ -1,0 +1,402 @@
+// Pirate galleon — sails set forward (parallelogram bands leaning toward the
+// bow as if caught by a tailwind). Authored entirely with shape ops.
+
+palette pirate {
+  sky    s #87ceeb
+  skylo  S #5fa0d0
+  sun    y #ffd700
+  sunhi  L #fff8b0
+  white  w #ffffff
+  cloud  C #dde8f0
+  sail   c #f5e6c4
+  M  M #d4b888
+  sailg  g #8a6a3d
+  masthi u #5c3820
+  mast   o #2a1810
+  rope   e #3a1f0c
+  hullhi H #b06e3a
+  hull   h #7a4220
+  hulld  d #4a2812
+  hullx  D #2a1408
+  goldhi q #ffd454
+  gold   Q #b08a20
+  red    r #c0392b
+  black  K #0a0503
+  sea    b #2a6dba
+  sealo  n #13407a
+  seax   N #0a2452
+  foam   f #b8dff5
+}
+
+sprite ship 96x80 palette=pirate {
+  // ====================================================
+  // SKY — gradient + sun + clouds + seagulls
+  // ====================================================
+  fill s
+  rect 0,18 95,32 S
+
+  circle 12,11 5 Q
+  circle 12,11 4 y
+  circle 12,11 2 L
+  pixel 12,4 y
+  pixel 12,18 y
+  pixel 5,11 y
+  pixel 19,11 y
+  pixel 7,6 y
+  pixel 17,16 y
+  pixel 17,6 y
+  pixel 7,16 y
+
+  rect 32,6 46,8 w
+  rect 33,5 45,5 w
+  rect 34,9 44,9 C
+  pixel 31,7 w
+  pixel 47,7 w
+
+  rect 24,14 36,16 w
+  rect 25,13 35,13 w
+  pixel 23,15 C
+  pixel 37,15 C
+
+  pixel 84,12 K
+  pixel 85,11 K
+  pixel 86,12 K
+  pixel 87,11 K
+  pixel 88,12 K
+
+  // ====================================================
+  // SEA
+  // ====================================================
+  rect 0,65 95,79 b
+  rect 0,71 95,79 n
+  rect 0,76 95,79 N
+  line 0,64 95,64 f
+  line 0,65 95,65 w
+  rect 3,67 8,67 f
+  rect 16,68 22,68 f
+  rect 30,67 35,67 f
+  rect 42,68 48,68 f
+  rect 55,67 62,67 f
+  rect 70,68 77,68 f
+  rect 84,67 92,67 f
+  pixel 12,70 f
+  pixel 28,71 f
+  pixel 44,70 f
+  pixel 60,71 f
+  pixel 76,70 f
+  pixel 88,71 f
+
+  // ====================================================
+  // HULL
+  // ====================================================
+  rect 5,50 91,64 h
+  line 5,51 91,51 H
+  line 5,54 91,54 H
+  line 5,57 91,57 H
+  line 5,60 91,60 H
+  line 5,53 91,53 d
+  line 5,56 91,56 d
+  line 5,59 91,59 d
+  line 5,62 91,62 d
+  rect 5,49 91,49 D
+  rect 5,50 91,50 d
+  rect 6,57 90,57 q
+  rect 6,58 90,58 Q
+  rect 7,63 89,63 d
+  rect 9,64 87,64 D
+  pixel 5,63 D
+  pixel 91,63 D
+
+  // Upper gunports
+  rect 11,52 13,54 K
+  rect 17,52 19,54 K
+  rect 23,52 25,54 K
+  rect 29,52 31,54 K
+  rect 35,52 37,54 K
+  rect 41,52 43,54 K
+  rect 53,52 55,54 K
+  rect 59,52 61,54 K
+  rect 65,52 67,54 K
+  rect 71,52 73,54 K
+  rect 77,52 79,54 K
+  rect 83,52 85,54 K
+  line 11,51 13,51 q
+  line 17,51 19,51 q
+  line 23,51 25,51 q
+  line 29,51 31,51 q
+  line 35,51 37,51 q
+  line 41,51 43,51 q
+  line 53,51 55,51 q
+  line 59,51 61,51 q
+  line 65,51 67,51 q
+  line 71,51 73,51 q
+  line 77,51 79,51 q
+  line 83,51 85,51 q
+  pixel 12,53 K
+  pixel 30,53 K
+  pixel 54,53 K
+  pixel 78,53 K
+
+  // Lower gunports
+  rect 14,60 15,61 K
+  rect 24,60 25,61 K
+  rect 34,60 35,61 K
+  rect 44,60 45,61 K
+  rect 56,60 57,61 K
+  rect 66,60 67,61 K
+  rect 76,60 77,61 K
+  rect 86,60 87,61 K
+
+  // Stern castle
+  rect 5,42 22,49 h
+  rect 5,42 22,43 d
+  rect 5,44 22,44 H
+  rect 7,46 9,47 q
+  rect 11,46 13,47 q
+  rect 15,46 17,47 q
+  rect 19,46 21,47 q
+  pixel 7,45 Q
+  pixel 11,45 Q
+  pixel 15,45 Q
+  pixel 19,45 Q
+  rect 21,38 21,42 o
+  rect 19,37 23,38 K
+  pixel 21,36 L
+  pixel 20,37 y
+  pixel 22,37 y
+  pixel 21,37 L
+
+  // Bow castle
+  rect 76,44 91,49 h
+  rect 76,44 91,45 d
+  rect 76,46 91,46 H
+  pixel 78,43 o
+  pixel 81,43 o
+  pixel 84,43 o
+  pixel 87,43 o
+  pixel 90,43 o
+  line 78,42 90,42 u
+
+  // ====================================================
+  // BOWSPRIT + jib sails (also leaning forward)
+  // ====================================================
+  line 91,48 95,42 o
+  line 90,49 94,43 u
+  // Outer jib (leaning right)
+  rect 89,44 93,45 c
+  rect 90,46 94,47 c
+  rect 91,48 95,49 M
+  line 95,44 95,49 g
+  // Inner jib
+  rect 86,38 91,39 c
+  rect 87,40 92,41 c
+  rect 88,42 93,43 M
+
+  // ====================================================
+  // MAINMAST (tallest, col 48)
+  // ====================================================
+  rect 47,2 49,50 o
+  rect 47,2 47,50 u
+
+  // === Mainsail (course) — 4 bands leaning right ===
+  rect 36,30 60,33 c
+  rect 37,34 61,37 c
+  rect 38,38 62,41 c
+  rect 39,42 63,46 c
+  // top shadow (under yard)
+  line 36,30 60,30 M
+  line 37,34 61,34 M
+  line 38,38 62,38 M
+  line 39,42 63,42 M
+  // left edge shadow (mast/back side)
+  rect 36,30 36,33 g
+  rect 37,34 37,37 g
+  rect 38,38 38,41 g
+  rect 39,42 39,46 g
+  // right edge highlight band
+  rect 60,30 60,33 M
+  rect 61,34 61,37 M
+  rect 62,38 62,41 M
+  rect 63,42 63,46 M
+
+  // === Mainmast topsail — 3 bands leaning right ===
+  rect 39,19 57,22 c
+  rect 40,23 58,25 c
+  rect 41,26 59,28 c
+  line 39,19 57,19 M
+  line 40,23 58,23 M
+  line 41,26 59,26 M
+  rect 39,19 39,22 g
+  rect 40,23 40,25 g
+  rect 41,26 41,28 g
+  rect 57,19 57,22 M
+  rect 58,23 58,25 M
+  rect 59,26 59,28 M
+
+  // === Mainmast topgallant — 2 bands leaning right ===
+  rect 42,11 54,14 c
+  rect 43,15 55,17 c
+  line 42,11 54,11 M
+  line 43,15 55,15 M
+  rect 42,11 42,14 g
+  rect 43,15 43,17 g
+
+  // Mainmast yards
+  line 34,30 62,30 o
+  line 38,19 58,19 o
+  line 41,11 55,11 o
+  pixel 33,30 o
+  pixel 63,30 o
+  pixel 37,19 o
+  pixel 59,19 o
+  pixel 40,11 o
+  pixel 56,11 o
+
+  // ====================================================
+  // FOREMAST (col 20)
+  // ====================================================
+  rect 19,10 21,50 o
+  rect 19,10 19,50 u
+
+  // === Foremast course — 4 bands leaning right ===
+  rect 8,28 32,31 c
+  rect 9,32 33,35 c
+  rect 10,36 34,39 c
+  rect 11,40 35,46 c
+  line 8,28 32,28 M
+  line 9,32 33,32 M
+  line 10,36 34,36 M
+  line 11,40 35,40 M
+  rect 8,28 8,31 g
+  rect 9,32 9,35 g
+  rect 10,36 10,39 g
+  rect 11,40 11,46 g
+  rect 32,28 32,31 M
+  rect 33,32 33,35 M
+  rect 34,36 34,39 M
+  rect 35,40 35,46 M
+
+  // === Foremast topsail — 3 bands leaning right ===
+  rect 11,18 29,21 c
+  rect 12,22 30,24 c
+  rect 13,25 31,26 c
+  line 11,18 29,18 M
+  line 12,22 30,22 M
+  rect 11,18 11,21 g
+  rect 12,22 12,24 g
+  rect 13,25 13,26 g
+  rect 29,18 29,21 M
+  rect 30,22 30,24 M
+  rect 31,25 31,26 M
+
+  // Foremast yards
+  line 6,28 34,28 o
+  line 10,18 30,18 o
+  pixel 5,28 o
+  pixel 35,28 o
+  pixel 9,18 o
+  pixel 31,18 o
+
+  // ====================================================
+  // MIZZENMAST (col 72)
+  // ====================================================
+  rect 71,15 73,50 o
+  rect 71,15 71,50 u
+
+  // === Mizzen course — 4 bands leaning right ===
+  rect 62,31 82,34 c
+  rect 63,35 83,38 c
+  rect 64,39 84,42 c
+  rect 65,43 85,46 c
+  line 62,31 82,31 M
+  line 63,35 83,35 M
+  line 64,39 84,39 M
+  line 65,43 85,43 M
+  rect 62,31 62,34 g
+  rect 63,35 63,38 g
+  rect 64,39 64,42 g
+  rect 65,43 65,46 g
+  rect 82,31 82,34 M
+  rect 83,35 83,38 M
+  rect 84,39 84,42 M
+  rect 85,43 85,46 M
+
+  // === Mizzen topsail — 3 bands leaning right ===
+  rect 65,22 79,24 c
+  rect 66,25 80,27 c
+  rect 67,28 81,29 c
+  line 65,22 79,22 M
+  line 66,25 80,25 M
+  rect 65,22 65,24 g
+  rect 66,25 66,27 g
+  rect 67,28 67,29 g
+  rect 79,22 79,24 M
+  rect 80,25 80,27 M
+  rect 81,28 81,29 M
+
+  // Mizzen yards
+  line 60,31 84,31 o
+  line 64,22 80,22 o
+  pixel 59,31 o
+  pixel 85,31 o
+  pixel 63,22 o
+  pixel 81,22 o
+
+  // ====================================================
+  // CROW'S NEST on mainmast (above topgallant)
+  // ====================================================
+  rect 44,8 52,9 h
+  rect 44,8 52,8 d
+  pixel 44,7 d
+  pixel 52,7 d
+  pixel 46,8 q
+  pixel 50,8 q
+
+  // ====================================================
+  // RIGGING — shrouds following the parallelogram lean
+  // ====================================================
+  line 34,30 39,49 e
+  line 62,30 60,49 e
+  line 6,28 14,49 e
+  line 34,28 32,49 e
+  line 60,31 65,49 e
+  line 84,31 84,49 e
+  // forestays (mast tops to bow)
+  line 48,2 95,40 e
+  line 20,10 35,30 e
+  line 72,15 60,30 e
+
+  // ====================================================
+  // JOLLY ROGER FLAG — also leaning forward slightly
+  // ====================================================
+  rect 50,3 65,5 K
+  rect 51,6 66,8 K
+  rect 52,9 67,11 K
+  // skull
+  rect 55,4 60,6 w
+  pixel 55,7 w
+  pixel 60,7 w
+  rect 56,7 59,7 w
+  pixel 56,5 K
+  pixel 57,5 K
+  pixel 59,5 K
+  pixel 60,5 K
+  // crossbones
+  pixel 53,9 w
+  pixel 64,10 w
+  pixel 54,10 w
+  pixel 63,11 w
+
+  // ====================================================
+  // ANCHOR on the bow
+  // ====================================================
+  rect 84,55 85,57 K
+  pixel 83,55 K
+  pixel 86,55 K
+  pixel 82,57 K
+  pixel 87,57 K
+  pixel 81,58 K
+  pixel 88,58 K
+  pixel 84,53 e
+  pixel 84,54 e
+}

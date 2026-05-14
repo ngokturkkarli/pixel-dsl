@@ -1,15 +1,22 @@
 import type { CstNode, IToken } from "chevrotain";
 import type {
 	Cell,
+	CircleOp,
+	FillOp,
 	HexValue,
 	Invocation,
 	InvocationArg,
+	LineOp,
 	Location,
+	OpValue,
 	PaletteDecl,
 	PaletteEntry,
 	PaletteRef,
+	PixelOp,
 	Program,
+	RectOp,
 	SpriteDecl,
+	SpriteOp,
 	SpriteParam,
 } from "./ast.js";
 import { parserInstance } from "./parser.js";
@@ -97,6 +104,7 @@ class PixelAstBuilder extends BaseVisitor {
 		Dimensions: IToken[];
 		paletteName?: IToken[];
 		cell?: CstNode[];
+		op?: CstNode[];
 	}): SpriteDecl {
 		const params = ctx.spriteParams
 			? (this.visit(ctx.spriteParams[0]) as SpriteParam[])
@@ -110,6 +118,7 @@ class PixelAstBuilder extends BaseVisitor {
 			height: h,
 			palette: ctx.paletteName?.[0].image,
 			cells: (ctx.cell ?? []).map((n) => this.visit(n) as Cell),
+			ops: (ctx.op ?? []).map((n) => this.visit(n) as SpriteOp),
 			loc: locOf(ctx.Sprite[0]),
 		};
 	}
@@ -172,6 +181,127 @@ class PixelAstBuilder extends BaseVisitor {
 			return { type: "TransparentCell", loc: locOf(ctx.Dot[0]) };
 		}
 		throw new Error("cell: parser guarantees Identifier | HexColor | Dot");
+	}
+
+	op(ctx: {
+		fillOp?: CstNode[];
+		rectOp?: CstNode[];
+		pixelOp?: CstNode[];
+		lineOp?: CstNode[];
+		circleOp?: CstNode[];
+	}): SpriteOp {
+		const node =
+			ctx.fillOp?.[0] ??
+			ctx.rectOp?.[0] ??
+			ctx.pixelOp?.[0] ??
+			ctx.lineOp?.[0] ??
+			ctx.circleOp?.[0];
+		if (!node) throw new Error("op: parser guarantees one of the op kinds");
+		return this.visit(node) as SpriteOp;
+	}
+
+	opValue(ctx: {
+		Identifier?: IToken[];
+		HexColor?: IToken[];
+		Dot?: IToken[];
+	}): OpValue {
+		if (ctx.Identifier) {
+			const tok = ctx.Identifier[0];
+			return { type: "PaletteRef", name: tok.image, loc: locOf(tok) };
+		}
+		if (ctx.HexColor) {
+			const tok = ctx.HexColor[0];
+			return { type: "HexValue", hex: tok.image, loc: locOf(tok) };
+		}
+		if (ctx.Dot) {
+			return { type: "TransparentCell", loc: locOf(ctx.Dot[0]) };
+		}
+		throw new Error("opValue: parser guarantees Identifier | HexColor | Dot");
+	}
+
+	coord(ctx: { x: IToken[]; y: IToken[] }): { x: number; y: number } {
+		return {
+			x: Number.parseInt(ctx.x[0].image, 10),
+			y: Number.parseInt(ctx.y[0].image, 10),
+		};
+	}
+
+	fillOp(ctx: { Fill: IToken[]; opValue: CstNode[] }): FillOp {
+		return {
+			type: "FillOp",
+			value: this.visit(ctx.opValue[0]) as OpValue,
+			loc: locOf(ctx.Fill[0]),
+		};
+	}
+
+	rectOp(ctx: {
+		Rect: IToken[];
+		from: CstNode[];
+		to: CstNode[];
+		opValue: CstNode[];
+	}): RectOp {
+		const from = this.visit(ctx.from[0]) as { x: number; y: number };
+		const to = this.visit(ctx.to[0]) as { x: number; y: number };
+		return {
+			type: "RectOp",
+			x0: from.x,
+			y0: from.y,
+			x1: to.x,
+			y1: to.y,
+			value: this.visit(ctx.opValue[0]) as OpValue,
+			loc: locOf(ctx.Rect[0]),
+		};
+	}
+
+	pixelOp(ctx: {
+		Pixel: IToken[];
+		at: CstNode[];
+		opValue: CstNode[];
+	}): PixelOp {
+		const at = this.visit(ctx.at[0]) as { x: number; y: number };
+		return {
+			type: "PixelOp",
+			x: at.x,
+			y: at.y,
+			value: this.visit(ctx.opValue[0]) as OpValue,
+			loc: locOf(ctx.Pixel[0]),
+		};
+	}
+
+	lineOp(ctx: {
+		Line: IToken[];
+		from: CstNode[];
+		to: CstNode[];
+		opValue: CstNode[];
+	}): LineOp {
+		const from = this.visit(ctx.from[0]) as { x: number; y: number };
+		const to = this.visit(ctx.to[0]) as { x: number; y: number };
+		return {
+			type: "LineOp",
+			x0: from.x,
+			y0: from.y,
+			x1: to.x,
+			y1: to.y,
+			value: this.visit(ctx.opValue[0]) as OpValue,
+			loc: locOf(ctx.Line[0]),
+		};
+	}
+
+	circleOp(ctx: {
+		Circle: IToken[];
+		center: CstNode[];
+		radius: IToken[];
+		opValue: CstNode[];
+	}): CircleOp {
+		const center = this.visit(ctx.center[0]) as { x: number; y: number };
+		return {
+			type: "CircleOp",
+			cx: center.x,
+			cy: center.y,
+			r: Number.parseInt(ctx.radius[0].image, 10),
+			value: this.visit(ctx.opValue[0]) as OpValue,
+			loc: locOf(ctx.Circle[0]),
+		};
 	}
 }
 
