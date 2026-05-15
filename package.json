@@ -8,7 +8,9 @@
     "test": "pnpm -r test",
     "typecheck": "pnpm -r typecheck",
     "format": "pnpm -r format",
-    "lint": "pnpm -r lint"
+    "lint": "pnpm -r lint",
+    "dev:playground": "pnpm --filter @pixel-dsl/playground dev",
+    "dev:docs": "pnpm --filter @pixel-dsl/docs dev"
   },
   "keywords": [],
   "author": "",

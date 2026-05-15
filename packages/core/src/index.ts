@@ -43,4 +43,10 @@ export {
 	resolvePalette,
 	resolveProgramPalettes,
 } from "./palette.js";
-export { RenderError, type RenderOpts, render } from "./render.js";
+export {
+	RenderError,
+	type RenderedImage,
+	type RenderOpts,
+	render,
+	renderPixels,
+} from "./render.js";

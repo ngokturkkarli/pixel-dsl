@@ -263,7 +263,16 @@ function nearestNeighbor(
 	return dst;
 }
 
-export function render(program: Program, opts: RenderOpts = {}): Uint8Array {
+export interface RenderedImage {
+	width: number;
+	height: number;
+	data: Uint8Array; // RGBA, row-major
+}
+
+export function renderPixels(
+	program: Program,
+	opts: RenderOpts = {},
+): RenderedImage {
 	const scale = opts.scale ?? 1;
 	if (!Number.isInteger(scale) || scale < 1) {
 		throw new RenderError(`scale must be a positive integer, got ${scale}.`, {
@@ -315,16 +324,22 @@ export function render(program: Program, opts: RenderOpts = {}): Uint8Array {
 	}
 
 	const scaled = nearestNeighbor(pixels, sprite.width, sprite.height, scale);
-
-	const outW = sprite.width * scale;
-	const outH = sprite.height * scale;
-	const png = new PNG({ width: outW, height: outH });
+	const width = sprite.width * scale;
+	const height = sprite.height * scale;
+	const data = new Uint8Array(width * height * 4);
 	for (let i = 0; i < scaled.length; i++) {
 		const { r, g, b, a } = scaled[i];
-		png.data[i * 4 + 0] = r;
-		png.data[i * 4 + 1] = g;
-		png.data[i * 4 + 2] = b;
-		png.data[i * 4 + 3] = a;
+		data[i * 4 + 0] = r;
+		data[i * 4 + 1] = g;
+		data[i * 4 + 2] = b;
+		data[i * 4 + 3] = a;
 	}
+	return { width, height, data };
+}
+
+export function render(program: Program, opts: RenderOpts = {}): Uint8Array {
+	const { width, height, data } = renderPixels(program, opts);
+	const png = new PNG({ width, height });
+	png.data.set(data);
 	return new Uint8Array(PNG.sync.write(png));
 }
