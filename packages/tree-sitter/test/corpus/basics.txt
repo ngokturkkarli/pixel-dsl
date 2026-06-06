@@ -1,0 +1,79 @@
+================================================================================
+Palette declaration
+================================================================================
+
+palette nes { black k #000000 }
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (palette_decl
+    name: (identifier)
+    (palette_entry
+      long: (identifier)
+      short: (identifier)
+      color: (hex_color))))
+
+================================================================================
+Sprite with shape ops and flip
+================================================================================
+
+sprite hero 4x4 palette=nes {
+  fill k
+  rect 1,1 2,2 w
+  circle 2,2 1 #ff0
+  flip h
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (sprite_decl
+    name: (identifier)
+    size: (dimensions)
+    (palette_attr
+      palette: (identifier))
+    (fill_op
+      value: (identifier))
+    (rect_op
+      from: (coord
+        x: (integer)
+        y: (integer))
+      to: (coord
+        x: (integer)
+        y: (integer))
+      value: (identifier))
+    (circle_op
+      center: (coord
+        x: (integer)
+        y: (integer))
+      radius: (integer)
+      value: (hex_color))
+    (flip_op
+      axis: (identifier))))
+
+================================================================================
+Cell grid with comment and row separator
+================================================================================
+
+// a comment
+sprite hero 2x2 {
+  k k / k .
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (comment)
+  (sprite_decl
+    name: (identifier)
+    size: (dimensions)
+    (cell
+      (identifier))
+    (cell
+      (identifier))
+    (row_separator)
+    (cell
+      (identifier))
+    (cell
+      (transparent))))

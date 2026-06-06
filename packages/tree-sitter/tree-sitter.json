@@ -1,0 +1,36 @@
+{
+	"$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/config.schema.json",
+	"grammars": [
+		{
+			"name": "pixel_dsl",
+			"camelcase": "PixelDsl",
+			"scope": "source.pix",
+			"path": ".",
+			"file-types": ["pix"],
+			"highlights": ["queries/highlights.scm"],
+			"injection-regex": "^pix$"
+		}
+	],
+	"metadata": {
+		"version": "0.1.0",
+		"license": "ISC",
+		"description": "Tree-sitter grammar for Pixel-DSL",
+		"authors": [
+			{
+				"name": "msyavuz",
+				"email": "salih.yavuz@proton.me"
+			}
+		],
+		"links": {
+			"repository": "https://github.com/msyavuz/pixel-dsl"
+		}
+	},
+	"bindings": {
+		"c": true,
+		"go": false,
+		"node": true,
+		"python": false,
+		"rust": true,
+		"swift": false
+	}
+}

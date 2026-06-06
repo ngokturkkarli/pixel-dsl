@@ -1,0 +1,47 @@
+{
+	"name": "tree-sitter-pixel-dsl",
+	"version": "0.1.0",
+	"private": true,
+	"description": "Tree-sitter grammar for Pixel-DSL — incremental parsing and editor highlighting.",
+	"keywords": [
+		"tree-sitter",
+		"parser",
+		"pixel-dsl",
+		"pixel-art",
+		"grammar"
+	],
+	"author": "msyavuz <salih.yavuz@proton.me>",
+	"license": "ISC",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/msyavuz/pixel-dsl.git",
+		"directory": "packages/tree-sitter"
+	},
+	"files": [
+		"grammar.js",
+		"queries/*.scm",
+		"src/**/*.c",
+		"src/**/*.h",
+		"src/**/*.json"
+	],
+	"scripts": {
+		"generate": "tree-sitter generate",
+		"ts-test": "tree-sitter test",
+		"ts-parse": "tree-sitter parse"
+	},
+	"devDependencies": {
+		"tree-sitter-cli": "^0.26.0"
+	},
+	"tree-sitter": [
+		{
+			"scope": "source.pix",
+			"file-types": [
+				"pix"
+			],
+			"highlights": [
+				"queries/highlights.scm"
+			],
+			"injection-regex": "^pix$"
+		}
+	]
+}

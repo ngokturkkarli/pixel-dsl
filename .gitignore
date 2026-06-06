@@ -8,3 +8,8 @@ dist
 # vitepress build cache
 docs/.vitepress/cache
 docs/.vitepress/dist
+
+# compiled tree-sitter parser artifacts
+*.so
+*.dylib
+*.wasm
