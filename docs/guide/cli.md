@@ -1,5 +1,12 @@
 # CLI usage
 
+## Install
+
+```bash
+npm install -g @pixel-dsl/cli
+# or run ad-hoc: npx @pixel-dsl/cli build ...
+```
+
 ## Commands
 
 ```bash
