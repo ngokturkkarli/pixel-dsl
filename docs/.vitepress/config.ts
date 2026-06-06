@@ -19,6 +19,7 @@ export default defineConfig({
 			{ text: "Guide", link: "/guide/getting-started" },
 			{ text: "Grammar", link: "/guide/grammar" },
 			{ text: "Examples", link: "/examples/" },
+			{ text: "Playground", link: "/playground/", target: "_self" },
 		],
 		sidebar: {
 			"/guide/": [

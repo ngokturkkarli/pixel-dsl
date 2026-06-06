@@ -1,4 +1,4 @@
-name: Deploy Docs
+name: Deploy Site
 
 on:
   push:
@@ -39,6 +39,12 @@ jobs:
 
       - name: Build docs
         run: pnpm --filter @pixel-dsl/docs build
+
+      - name: Build playground
+        run: pnpm --filter @pixel-dsl/playground build
+
+      - name: Merge playground into docs site
+        run: cp -r apps/playground/dist docs/.vitepress/dist/playground
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
