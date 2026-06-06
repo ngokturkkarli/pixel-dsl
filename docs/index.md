@@ -16,5 +16,5 @@ features:
   - title: LLM-friendly
     details: Compact grammar that fits in a system prompt. Shape ops (rect, line, circle, fill, pixel) let an LLM describe a sprite without enumerating cells.
   - title: Minimal stack
-    details: One TypeScript codebase, runs in Node (CLI) or the browser (playground). MIT licensed.
+    details: One TypeScript codebase, runs in Node (CLI) or the browser (playground). ISC licensed.
 ---
