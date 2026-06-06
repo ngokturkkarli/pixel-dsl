@@ -1,0 +1,467 @@
+{
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/grammar.schema.json",
+  "name": "pixel_dsl",
+  "word": "identifier",
+  "rules": {
+    "source_file": {
+      "type": "REPEAT",
+      "content": {
+        "type": "SYMBOL",
+        "name": "_definition"
+      }
+    },
+    "_definition": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "palette_decl"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "sprite_decl"
+        }
+      ]
+    },
+    "palette_decl": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "palette"
+        },
+        {
+          "type": "FIELD",
+          "name": "name",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "{"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SYMBOL",
+            "name": "palette_entry"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "}"
+        }
+      ]
+    },
+    "palette_entry": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "long",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          }
+        },
+        {
+          "type": "FIELD",
+          "name": "short",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          }
+        },
+        {
+          "type": "FIELD",
+          "name": "color",
+          "content": {
+            "type": "SYMBOL",
+            "name": "hex_color"
+          }
+        }
+      ]
+    },
+    "sprite_decl": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "sprite"
+        },
+        {
+          "type": "FIELD",
+          "name": "name",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          }
+        },
+        {
+          "type": "FIELD",
+          "name": "size",
+          "content": {
+            "type": "SYMBOL",
+            "name": "dimensions"
+          }
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "palette_attr"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "STRING",
+          "value": "{"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_body_item"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "}"
+        }
+      ]
+    },
+    "palette_attr": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "palette"
+        },
+        {
+          "type": "STRING",
+          "value": "="
+        },
+        {
+          "type": "FIELD",
+          "name": "palette",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          }
+        }
+      ]
+    },
+    "_body_item": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "_op"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "cell"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "row_separator"
+        }
+      ]
+    },
+    "row_separator": {
+      "type": "STRING",
+      "value": "/"
+    },
+    "cell": {
+      "type": "SYMBOL",
+      "name": "_value"
+    },
+    "_op": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "fill_op"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "rect_op"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "pixel_op"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "line_op"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "circle_op"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "flip_op"
+        }
+      ]
+    },
+    "fill_op": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "fill"
+        },
+        {
+          "type": "FIELD",
+          "name": "value",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_value"
+          }
+        }
+      ]
+    },
+    "rect_op": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "rect"
+        },
+        {
+          "type": "FIELD",
+          "name": "from",
+          "content": {
+            "type": "SYMBOL",
+            "name": "coord"
+          }
+        },
+        {
+          "type": "FIELD",
+          "name": "to",
+          "content": {
+            "type": "SYMBOL",
+            "name": "coord"
+          }
+        },
+        {
+          "type": "FIELD",
+          "name": "value",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_value"
+          }
+        }
+      ]
+    },
+    "pixel_op": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "pixel"
+        },
+        {
+          "type": "FIELD",
+          "name": "at",
+          "content": {
+            "type": "SYMBOL",
+            "name": "coord"
+          }
+        },
+        {
+          "type": "FIELD",
+          "name": "value",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_value"
+          }
+        }
+      ]
+    },
+    "line_op": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "line"
+        },
+        {
+          "type": "FIELD",
+          "name": "from",
+          "content": {
+            "type": "SYMBOL",
+            "name": "coord"
+          }
+        },
+        {
+          "type": "FIELD",
+          "name": "to",
+          "content": {
+            "type": "SYMBOL",
+            "name": "coord"
+          }
+        },
+        {
+          "type": "FIELD",
+          "name": "value",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_value"
+          }
+        }
+      ]
+    },
+    "circle_op": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "circle"
+        },
+        {
+          "type": "FIELD",
+          "name": "center",
+          "content": {
+            "type": "SYMBOL",
+            "name": "coord"
+          }
+        },
+        {
+          "type": "FIELD",
+          "name": "radius",
+          "content": {
+            "type": "SYMBOL",
+            "name": "integer"
+          }
+        },
+        {
+          "type": "FIELD",
+          "name": "value",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_value"
+          }
+        }
+      ]
+    },
+    "flip_op": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "flip"
+        },
+        {
+          "type": "FIELD",
+          "name": "axis",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          }
+        }
+      ]
+    },
+    "coord": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "x",
+          "content": {
+            "type": "SYMBOL",
+            "name": "integer"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": ","
+        },
+        {
+          "type": "FIELD",
+          "name": "y",
+          "content": {
+            "type": "SYMBOL",
+            "name": "integer"
+          }
+        }
+      ]
+    },
+    "_value": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "identifier"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "hex_color"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "transparent"
+        }
+      ]
+    },
+    "transparent": {
+      "type": "STRING",
+      "value": "."
+    },
+    "hex_color": {
+      "type": "PATTERN",
+      "value": "#[0-9a-fA-F]{3,8}"
+    },
+    "dimensions": {
+      "type": "PATTERN",
+      "value": "\\d+x\\d+"
+    },
+    "integer": {
+      "type": "PATTERN",
+      "value": "\\d+"
+    },
+    "identifier": {
+      "type": "PATTERN",
+      "value": "[a-zA-Z_][a-zA-Z0-9_]*"
+    },
+    "comment": {
+      "type": "TOKEN",
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "STRING",
+            "value": "//"
+          },
+          {
+            "type": "PATTERN",
+            "value": "[^\\n]*"
+          }
+        ]
+      }
+    }
+  },
+  "extras": [
+    {
+      "type": "PATTERN",
+      "value": "\\s"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "comment"
+    }
+  ],
+  "conflicts": [],
+  "precedences": [],
+  "externals": [],
+  "inline": [],
+  "supertypes": [],
+  "reserved": {}
+}
