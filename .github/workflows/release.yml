@@ -8,6 +8,10 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      # Required for npm Trusted Publishing (OIDC) — no long-lived token needed.
+      id-token: write
+      contents: read
     steps:
       - uses: actions/checkout@v4
 
@@ -33,7 +37,8 @@ jobs:
       - name: Build
         run: pnpm -r build
 
+      # Auth comes from GitHub's OIDC token, exchanged for a short-lived npm
+      # token. Configure each package's Trusted Publisher on npm to point at
+      # this repo + this workflow file (release.yml) before the first OIDC run.
       - name: Publish to npm
         run: pnpm -r publish --access public --no-git-checks
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
