@@ -1,0 +1,30 @@
+// A leafy round tree — overlapping circles for foliage on a bark trunk.
+palette tree {
+  trunk  b #7a4a22
+  bark   d #5a3415
+  leaf   g #4caf50
+  dark   e #2f7d35
+  light  l #8bd98e
+}
+
+sprite tree 32x32 palette=tree {
+  fill .
+  // trunk
+  rect 14,21 18,31 b
+  rect 14,21 15,31 d
+  // foliage clusters
+  circle 16,13 9 g
+  circle 9,17 6 g
+  circle 23,17 6 g
+  circle 16,18 8 g
+  // shaded underside
+  circle 16,20 7 e
+  circle 23,19 5 e
+  // re-cap the lit top
+  circle 16,12 8 g
+  circle 10,15 5 g
+  // highlights
+  circle 13,9 3 l
+  pixel 20,11 l
+  pixel 8,14 l
+}

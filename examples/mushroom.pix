@@ -1,0 +1,29 @@
+// A toadstool — domed red cap with white spots over a pale stem.
+// The dome is a circle with its lower half cleared; the stem is drawn
+// *after* the clear so it isn't erased.
+palette mushroom {
+  cap    r #e0392f
+  dark   d #b02720
+  spot   w #fff3e0
+  stem   s #f2e2c4
+  shade  h #d3bd97
+}
+
+sprite mushroom 20x20 palette=mushroom {
+  fill .
+  // domed cap
+  circle 10,9 9 r
+  rect 0,10 19,19 .
+  // dark gill band under the cap
+  rect 2,9 17,10 d
+  // stem (after the dome is carved out)
+  rect 7,11 12,18 s
+  rect 11,11 12,18 h
+  rect 7,18 12,18 h
+  // rounded white spots
+  rect 5,4 6,5 w
+  rect 12,3 13,4 w
+  rect 9,7 10,8 w
+  pixel 3,7 w
+  pixel 16,6 w
+}
