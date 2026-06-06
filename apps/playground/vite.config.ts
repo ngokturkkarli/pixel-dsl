@@ -5,7 +5,10 @@ import { defineConfig } from "vite";
 
 const here = dirname(fileURLToPath(import.meta.url));
 
-export default defineConfig({
+export default defineConfig(({ command }) => ({
+	// Served under https://pixel-dsl.com/playground/ in production;
+	// kept at root during local `vite` dev.
+	base: command === "build" ? "/playground/" : "/",
 	plugins: [react()],
 	resolve: {
 		alias: {
@@ -16,4 +19,4 @@ export default defineConfig({
 	optimizeDeps: {
 		exclude: ["pngjs"],
 	},
-});
+}));
