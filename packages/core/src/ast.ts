@@ -7,7 +7,6 @@ export interface Program {
 	type: "Program";
 	palettes: PaletteDecl[];
 	sprites: SpriteDecl[];
-	invocations: Invocation[];
 }
 
 export interface PaletteDecl {
@@ -28,7 +27,6 @@ export interface PaletteEntry {
 export interface SpriteDecl {
 	type: "SpriteDecl";
 	name: string;
-	params: SpriteParam[];
 	width: number;
 	height: number;
 	palette?: string;
@@ -37,7 +35,7 @@ export interface SpriteDecl {
 	loc: Location;
 }
 
-export type SpriteOp = FillOp | RectOp | PixelOp | LineOp | CircleOp;
+export type SpriteOp = FillOp | RectOp | PixelOp | LineOp | CircleOp | FlipOp;
 
 export type OpValue = PaletteRef | HexValue | TransparentCell;
 
@@ -84,24 +82,9 @@ export interface CircleOp {
 	loc: Location;
 }
 
-export interface SpriteParam {
-	type: "SpriteParam";
-	name: string;
-	default: PaletteRef | HexValue;
-	loc: Location;
-}
-
-export interface Invocation {
-	type: "Invocation";
-	name: string;
-	args: InvocationArg[];
-	loc: Location;
-}
-
-export interface InvocationArg {
-	type: "InvocationArg";
-	name: string;
-	value: PaletteRef | HexValue;
+export interface FlipOp {
+	type: "FlipOp";
+	axis: string;
 	loc: Location;
 }
 

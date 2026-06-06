@@ -3,41 +3,22 @@ import type {
 	Cell,
 	CircleOp,
 	FillOp,
-	HexValue,
-	Invocation,
-	InvocationArg,
+	FlipOp,
 	LineOp,
 	Location,
 	OpValue,
 	PaletteDecl,
 	PaletteEntry,
-	PaletteRef,
 	PixelOp,
 	Program,
 	RectOp,
 	SpriteDecl,
 	SpriteOp,
-	SpriteParam,
 } from "./ast.js";
 import { parserInstance } from "./parser.js";
 
 function locOf(token: IToken): Location {
 	return { line: token.startLine ?? 1, col: token.startColumn ?? 1 };
-}
-
-function refOrHex(ctx: {
-	valueRef?: IToken[];
-	HexColor?: IToken[];
-}): PaletteRef | HexValue {
-	if (ctx.valueRef) {
-		const tok = ctx.valueRef[0];
-		return { type: "PaletteRef", name: tok.image, loc: locOf(tok) };
-	}
-	if (ctx.HexColor) {
-		const tok = ctx.HexColor[0];
-		return { type: "HexValue", hex: tok.image, loc: locOf(tok) };
-	}
-	throw new Error("refOrHex: parser guarantees valueRef | HexColor");
 }
 
 const BaseVisitor = parserInstance.getBaseCstVisitorConstructor<
@@ -51,20 +32,13 @@ class PixelAstBuilder extends BaseVisitor {
 		this.validateVisitor();
 	}
 
-	program(ctx: {
-		paletteDecl?: CstNode[];
-		spriteDecl?: CstNode[];
-		invocation?: CstNode[];
-	}): Program {
+	program(ctx: { paletteDecl?: CstNode[]; spriteDecl?: CstNode[] }): Program {
 		return {
 			type: "Program",
 			palettes: (ctx.paletteDecl ?? []).map(
 				(n) => this.visit(n) as PaletteDecl,
 			),
 			sprites: (ctx.spriteDecl ?? []).map((n) => this.visit(n) as SpriteDecl),
-			invocations: (ctx.invocation ?? []).map(
-				(n) => this.visit(n) as Invocation,
-			),
 		};
 	}
 
@@ -100,67 +74,21 @@ class PixelAstBuilder extends BaseVisitor {
 	spriteDecl(ctx: {
 		Sprite: IToken[];
 		name: IToken[];
-		spriteParams?: CstNode[];
 		Dimensions: IToken[];
 		paletteName?: IToken[];
 		cell?: CstNode[];
 		op?: CstNode[];
 	}): SpriteDecl {
-		const params = ctx.spriteParams
-			? (this.visit(ctx.spriteParams[0]) as SpriteParam[])
-			: [];
 		const [w, h] = ctx.Dimensions[0].image.split("x").map(Number);
 		return {
 			type: "SpriteDecl",
 			name: ctx.name[0].image,
-			params,
 			width: w,
 			height: h,
 			palette: ctx.paletteName?.[0].image,
 			cells: (ctx.cell ?? []).map((n) => this.visit(n) as Cell),
 			ops: (ctx.op ?? []).map((n) => this.visit(n) as SpriteOp),
 			loc: locOf(ctx.Sprite[0]),
-		};
-	}
-
-	spriteParams(ctx: { spriteParam?: CstNode[] }): SpriteParam[] {
-		return (ctx.spriteParam ?? []).map((n) => this.visit(n) as SpriteParam);
-	}
-
-	spriteParam(ctx: {
-		name: IToken[];
-		valueRef?: IToken[];
-		HexColor?: IToken[];
-	}): SpriteParam {
-		return {
-			type: "SpriteParam",
-			name: ctx.name[0].image,
-			default: refOrHex(ctx),
-			loc: locOf(ctx.name[0]),
-		};
-	}
-
-	invocation(ctx: { name: IToken[]; invocationArg?: CstNode[] }): Invocation {
-		return {
-			type: "Invocation",
-			name: ctx.name[0].image,
-			args: (ctx.invocationArg ?? []).map(
-				(n) => this.visit(n) as InvocationArg,
-			),
-			loc: locOf(ctx.name[0]),
-		};
-	}
-
-	invocationArg(ctx: {
-		name: IToken[];
-		valueRef?: IToken[];
-		HexColor?: IToken[];
-	}): InvocationArg {
-		return {
-			type: "InvocationArg",
-			name: ctx.name[0].image,
-			value: refOrHex(ctx),
-			loc: locOf(ctx.name[0]),
 		};
 	}
 
@@ -189,13 +117,15 @@ class PixelAstBuilder extends BaseVisitor {
 		pixelOp?: CstNode[];
 		lineOp?: CstNode[];
 		circleOp?: CstNode[];
+		flipOp?: CstNode[];
 	}): SpriteOp {
 		const node =
 			ctx.fillOp?.[0] ??
 			ctx.rectOp?.[0] ??
 			ctx.pixelOp?.[0] ??
 			ctx.lineOp?.[0] ??
-			ctx.circleOp?.[0];
+			ctx.circleOp?.[0] ??
+			ctx.flipOp?.[0];
 		if (!node) throw new Error("op: parser guarantees one of the op kinds");
 		return this.visit(node) as SpriteOp;
 	}
@@ -301,6 +231,14 @@ class PixelAstBuilder extends BaseVisitor {
 			r: Number.parseInt(ctx.radius[0].image, 10),
 			value: this.visit(ctx.opValue[0]) as OpValue,
 			loc: locOf(ctx.Circle[0]),
+		};
+	}
+
+	flipOp(ctx: { Flip: IToken[]; axis: IToken[] }): FlipOp {
+		return {
+			type: "FlipOp",
+			axis: ctx.axis[0].image,
+			loc: locOf(ctx.Flip[0]),
 		};
 	}
 }

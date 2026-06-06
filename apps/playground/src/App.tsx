@@ -74,12 +74,29 @@ export function App() {
 		navigator.clipboard?.writeText(window.location.href);
 	};
 
+	const downloadPng = () => {
+		const canvas = canvasRef.current;
+		if (!canvas || !image) return;
+		canvas.toBlob((blob) => {
+			if (!blob) return;
+			const url = URL.createObjectURL(blob);
+			const a = document.createElement("a");
+			a.href = url;
+			a.download = "sprite.png";
+			a.click();
+			URL.revokeObjectURL(url);
+		});
+	};
+
 	return (
 		<div className="layout">
 			<header className="header">
 				<h1>Pixel-DSL Playground</h1>
 				<button type="button" onClick={shareLink}>
 					Copy share link
+				</button>
+				<button type="button" onClick={downloadPng} disabled={!image}>
+					Download PNG
 				</button>
 			</header>
 			<div className="split">

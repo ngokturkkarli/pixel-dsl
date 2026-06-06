@@ -7,17 +7,16 @@ import {
 	Dot,
 	Equals,
 	Fill,
+	Flip,
 	HexColor,
 	Identifier,
 	Integer,
 	LBrace,
 	Line,
-	LParen,
 	Palette,
 	Pixel,
 	RBrace,
 	Rect,
-	RParen,
 	Slash,
 	Sprite,
 } from "./tokens.js";
@@ -33,7 +32,6 @@ class PixelParser extends CstParser {
 			this.OR([
 				{ ALT: () => this.SUBRULE(this.paletteDecl) },
 				{ ALT: () => this.SUBRULE(this.spriteDecl) },
-				{ ALT: () => this.SUBRULE(this.invocation) },
 			]);
 		});
 	});
@@ -55,9 +53,8 @@ class PixelParser extends CstParser {
 	private spriteDecl = this.RULE("spriteDecl", () => {
 		this.CONSUME(Sprite);
 		this.CONSUME(Identifier, { LABEL: "name" });
-		this.OPTION(() => this.SUBRULE(this.spriteParams));
 		this.CONSUME(Dimensions);
-		this.OPTION2(() => {
+		this.OPTION(() => {
 			this.CONSUME(Palette);
 			this.CONSUME(Equals);
 			this.CONSUME2(Identifier, { LABEL: "paletteName" });
@@ -71,43 +68,6 @@ class PixelParser extends CstParser {
 			]);
 		});
 		this.CONSUME(RBrace);
-	});
-
-	private spriteParams = this.RULE("spriteParams", () => {
-		this.CONSUME(LParen);
-		this.MANY_SEP({
-			SEP: Comma,
-			DEF: () => this.SUBRULE(this.spriteParam),
-		});
-		this.CONSUME(RParen);
-	});
-
-	private spriteParam = this.RULE("spriteParam", () => {
-		this.CONSUME(Identifier, { LABEL: "name" });
-		this.CONSUME(Equals);
-		this.OR([
-			{ ALT: () => this.CONSUME2(Identifier, { LABEL: "valueRef" }) },
-			{ ALT: () => this.CONSUME(HexColor) },
-		]);
-	});
-
-	private invocation = this.RULE("invocation", () => {
-		this.CONSUME(Identifier, { LABEL: "name" });
-		this.CONSUME(LParen);
-		this.MANY_SEP({
-			SEP: Comma,
-			DEF: () => this.SUBRULE(this.invocationArg),
-		});
-		this.CONSUME(RParen);
-	});
-
-	private invocationArg = this.RULE("invocationArg", () => {
-		this.CONSUME(Identifier, { LABEL: "name" });
-		this.CONSUME(Equals);
-		this.OR([
-			{ ALT: () => this.CONSUME2(Identifier, { LABEL: "valueRef" }) },
-			{ ALT: () => this.CONSUME(HexColor) },
-		]);
 	});
 
 	private cell = this.RULE("cell", () => {
@@ -125,6 +85,7 @@ class PixelParser extends CstParser {
 			{ ALT: () => this.SUBRULE(this.pixelOp) },
 			{ ALT: () => this.SUBRULE(this.lineOp) },
 			{ ALT: () => this.SUBRULE(this.circleOp) },
+			{ ALT: () => this.SUBRULE(this.flipOp) },
 		]);
 	});
 
@@ -158,6 +119,11 @@ class PixelParser extends CstParser {
 		this.SUBRULE(this.coord, { LABEL: "center" });
 		this.CONSUME(Integer, { LABEL: "radius" });
 		this.SUBRULE(this.opValue);
+	});
+
+	private flipOp = this.RULE("flipOp", () => {
+		this.CONSUME(Flip);
+		this.CONSUME(Identifier, { LABEL: "axis" });
 	});
 
 	private coord = this.RULE("coord", () => {

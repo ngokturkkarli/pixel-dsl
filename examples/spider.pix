@@ -1,0 +1,81 @@
+// Spider — front view, 32x32. A black-widow style spider with eight
+// jointed legs, a round abdomen with a red hourglass, and big eyes.
+// Layer order: legs -> body -> body shading -> markings -> eyes.
+
+palette widow {
+  ink   K #140f17
+  dark  d #2a2230
+  body  b #443a52
+  hi    h #6a5a78
+  red   r #b0291f
+  redhi R #e0594a
+  white w #f2f0f5
+  glint y #9fd0ff
+}
+
+sprite spider 32x32 palette=widow {
+  fill .
+
+  // ---------------- LEGS (drawn first, body covers the joints) ----------------
+  // each leg = two segments meeting at a knee, mirrored left/right.
+  // left side
+  line 11,11 4,6   K
+  line 4,6   1,10  K
+  line 11,13 3,11  K
+  line 3,11  1,15  K
+  line 11,15 3,17  K
+  line 3,17  1,21  K
+  line 11,17 4,23  K
+  line 4,23  2,27  K
+  // right side
+  line 20,11 27,6  K
+  line 27,6  30,10 K
+  line 20,13 28,11 K
+  line 28,11 30,15 K
+  line 20,15 28,17 K
+  line 28,17 30,21 K
+  line 20,17 27,23 K
+  line 27,23 29,27 K
+
+  // ---------------- ABDOMEN ----------------
+  circle 16,21 9 K
+  circle 16,21 8 b
+  // shading: dark lower, light upper
+  circle 16,24 6 d
+  circle 14,17 4 h
+  pixel 13,15 h
+  pixel 12,16 h
+  circle 13,16 1 h
+
+  // ---------------- CEPHALOTHORAX (head) ----------------
+  circle 16,11 6 K
+  circle 16,11 5 b
+  circle 15,9 2 h
+
+  // ---------------- HOURGLASS MARKING ----------------
+  line 14,19 18,19 r
+  line 15,20 17,20 r
+  pixel 16,21 r
+  line 15,22 17,22 r
+  line 14,23 18,23 r
+  pixel 16,20 R
+  pixel 15,19 R
+  pixel 17,23 R
+
+  // ---------------- EYES ----------------
+  // two big eyes
+  circle 13,10 2 w
+  circle 19,10 2 w
+  pixel 13,10 K
+  pixel 19,10 K
+  pixel 14,9 y
+  pixel 20,9 y
+  // small extra eyes (widows have eight)
+  pixel 14,7 K
+  pixel 18,7 K
+  pixel 16,8 K
+
+  // chelicerae / fangs
+  line 14,14 13,16 K
+  line 18,14 19,16 K
+}

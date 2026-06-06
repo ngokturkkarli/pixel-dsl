@@ -39,18 +39,15 @@ describe("Lexer", () => {
 		]);
 	});
 
-	it("tokenizes sprite params and hex overrides", () => {
-		expect(typesAndImages("hero(skin=#fcc9b9, hair=#222)")).toEqual([
+	it("tokenizes a palette attribute on a sprite", () => {
+		expect(typesAndImages("sprite hero 8x8 palette=nes {")).toEqual([
+			{ type: "Sprite", image: "sprite" },
 			{ type: "Identifier", image: "hero" },
-			{ type: "LParen", image: "(" },
-			{ type: "Identifier", image: "skin" },
+			{ type: "Dimensions", image: "8x8" },
+			{ type: "Palette", image: "palette" },
 			{ type: "Equals", image: "=" },
-			{ type: "HexColor", image: "#fcc9b9" },
-			{ type: "Comma", image: "," },
-			{ type: "Identifier", image: "hair" },
-			{ type: "Equals", image: "=" },
-			{ type: "HexColor", image: "#222" },
-			{ type: "RParen", image: ")" },
+			{ type: "Identifier", image: "nes" },
+			{ type: "LBrace", image: "{" },
 		]);
 	});
 
@@ -119,16 +116,18 @@ describe("Lexer", () => {
 	});
 
 	it("tokenizes shape op keywords with longer_alt to Identifier", () => {
-		expect(typesAndImages("fill rect pixel line circle")).toEqual([
+		expect(typesAndImages("fill rect pixel line circle flip")).toEqual([
 			{ type: "Fill", image: "fill" },
 			{ type: "Rect", image: "rect" },
 			{ type: "Pixel", image: "pixel" },
 			{ type: "Line", image: "line" },
 			{ type: "Circle", image: "circle" },
+			{ type: "Flip", image: "flip" },
 		]);
-		expect(typesAndImages("fillX rectFoo")).toEqual([
+		expect(typesAndImages("fillX rectFoo flipper")).toEqual([
 			{ type: "Identifier", image: "fillX" },
 			{ type: "Identifier", image: "rectFoo" },
+			{ type: "Identifier", image: "flipper" },
 		]);
 	});
 

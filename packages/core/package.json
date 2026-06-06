@@ -1,7 +1,31 @@
 {
 	"name": "@pixel-dsl/core",
-	"version": "1.0.0",
-	"description": "",
+	"version": "0.1.0",
+	"description": "Parser and deterministic PNG renderer for Pixel-DSL, an LLM-friendly pixel-art sprite language.",
+	"keywords": [
+		"pixel-art",
+		"sprite",
+		"dsl",
+		"parser",
+		"renderer",
+		"png",
+		"llm",
+		"deterministic"
+	],
+	"author": "msyavuz <salih.yavuz@proton.me>",
+	"license": "ISC",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/msyavuz/pixel-dsl.git",
+		"directory": "packages/core"
+	},
+	"homepage": "https://github.com/msyavuz/pixel-dsl#readme",
+	"bugs": {
+		"url": "https://github.com/msyavuz/pixel-dsl/issues"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",
 	"exports": {
@@ -21,9 +45,6 @@
 		"format": "biome check --write",
 		"gen:goldens": "tsx scripts/gen-goldens.ts"
 	},
-	"keywords": [],
-	"author": "",
-	"license": "ISC",
 	"type": "module",
 	"dependencies": {
 		"chevrotain": "^12.0.0",

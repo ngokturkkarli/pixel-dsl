@@ -1,8 +1,17 @@
-import { defineConfig } from "vitepress";
+import { defineConfig, type UserConfig } from "vitepress";
+import pixGrammar from "./pix.tmLanguage.json";
+
+type PixLang = NonNullable<
+	NonNullable<UserConfig["markdown"]>["languages"]
+>[number];
 
 export default defineConfig({
 	title: "Pixel-DSL",
 	description: "A deterministic, LLM-friendly DSL for pixel art sprites.",
+	markdown: {
+		// Register the custom `pix` language so ```pix code blocks highlight.
+		languages: [pixGrammar as unknown as PixLang],
+	},
 	themeConfig: {
 		nav: [
 			{ text: "Guide", link: "/guide/getting-started" },
@@ -24,11 +33,7 @@ export default defineConfig({
 			"/examples/": [
 				{
 					text: "Examples",
-					items: [
-						{ text: "Overview", link: "/examples/" },
-						{ text: "Hero (8x8)", link: "/examples/hero" },
-						{ text: "Jolly Roger flag", link: "/examples/flag" },
-					],
+					items: [{ text: "Overview", link: "/examples/" }],
 				},
 			],
 		},

@@ -1,28 +1,37 @@
 {
-  "name": "pixel-dsl",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "build": "pnpm -r build",
-    "test": "pnpm -r test",
-    "typecheck": "pnpm -r typecheck",
-    "format": "pnpm -r format",
-    "lint": "pnpm -r lint",
-    "dev:playground": "pnpm --filter @pixel-dsl/playground dev",
-    "dev:docs": "pnpm --filter @pixel-dsl/docs dev"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "packageManager": "pnpm@11.1.1",
-  "dependencies": {
-    "tsx": "^4.21.0"
-  },
-  "devDependencies": {
-    "@biomejs/biome": "2.4.15",
-    "@types/node": "^25.7.0",
-    "typescript": "^6.0.3",
-    "vitest": "^4.1.6"
-  }
+	"name": "pixel-dsl",
+	"version": "0.1.0",
+	"private": true,
+	"description": "A deterministic, LLM-friendly DSL for pixel-art sprites — monorepo root.",
+	"type": "module",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/msyavuz/pixel-dsl.git"
+	},
+	"homepage": "https://github.com/msyavuz/pixel-dsl#readme",
+	"bugs": {
+		"url": "https://github.com/msyavuz/pixel-dsl/issues"
+	},
+	"author": "msyavuz <salih.yavuz@proton.me>",
+	"scripts": {
+		"build": "pnpm -r build",
+		"test": "pnpm -r test",
+		"typecheck": "pnpm -r typecheck",
+		"format": "pnpm -r format",
+		"lint": "pnpm -r lint",
+		"dev:playground": "pnpm --filter @pixel-dsl/playground dev",
+		"dev:docs": "pnpm --filter @pixel-dsl/docs dev"
+	},
+	"keywords": [],
+	"license": "ISC",
+	"packageManager": "pnpm@11.1.1",
+	"dependencies": {
+		"tsx": "^4.21.0"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.4.15",
+		"@types/node": "^25.7.0",
+		"typescript": "^6.0.3",
+		"vitest": "^4.1.6"
+	}
 }

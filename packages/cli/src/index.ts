@@ -1,13 +1,18 @@
 #!/usr/bin/env node
+import { readFileSync, watch } from "node:fs";
 import { Command } from "commander";
-import { runBuild } from "./build.js";
+import { type BuildArgs, runBuild } from "./build.js";
+
+const pkg = JSON.parse(
+	readFileSync(new URL("../package.json", import.meta.url), "utf8"),
+) as { version: string };
 
 const program = new Command();
 
 program
 	.name("pixel-dsl")
 	.description("Compile Pixel-DSL sources to PNG sprites.")
-	.version("0.0.0");
+	.version(pkg.version);
 
 program
 	.command("build")
@@ -16,10 +21,16 @@ program
 	.requiredOption("-o, --output <path>", "output PNG path")
 	.option("-s, --scale <n>", "upscale factor (positive integer)", "1")
 	.option("--sprite <name>", "sprite name to render (defaults to first)")
+	.option("-w, --watch", "rebuild whenever the input file changes")
 	.action(
 		(
 			input: string,
-			opts: { output: string; scale: string; sprite?: string },
+			opts: {
+				output: string;
+				scale: string;
+				sprite?: string;
+				watch?: boolean;
+			},
 		) => {
 			const scale = Number.parseInt(opts.scale, 10);
 			if (!Number.isInteger(scale) || scale < 1) {
@@ -28,14 +39,37 @@ program
 				);
 				process.exit(2);
 			}
-			const { ok } = runBuild({
+			const args: BuildArgs = {
 				input,
 				output: opts.output,
 				scale,
 				sprite: opts.sprite,
-			});
+			};
+			if (opts.watch) {
+				runWatch(args);
+				return;
+			}
+			const { ok } = runBuild(args);
 			process.exit(ok ? 0 : 1);
 		},
 	);
+
+function runWatch(args: BuildArgs): void {
+	const rebuild = () => {
+		try {
+			const { ok } = runBuild(args);
+			if (ok) process.stderr.write(`pixel-dsl: wrote ${args.output}\n`);
+		} catch (e) {
+			process.stderr.write(`pixel-dsl: ${(e as Error).message}\n`);
+		}
+	};
+	rebuild();
+	let timer: ReturnType<typeof setTimeout> | null = null;
+	watch(args.input, () => {
+		if (timer) clearTimeout(timer);
+		timer = setTimeout(rebuild, 50);
+	});
+	process.stderr.write(`pixel-dsl: watching ${args.input} (ctrl-c to stop)\n`);
+}
 
 program.parse();

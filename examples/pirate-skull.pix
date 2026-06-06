@@ -1,0 +1,117 @@
+// Pirate skull (Jolly Roger) — 32x32, seaflower15 palette.
+// https://lospec.com/palette-list/seaflower15
+// Authored with shape ops. Features (sockets/nose/teeth) painted last
+// so they always read on top of the bone and bandana.
+
+palette seaflower15 {
+  bonebri  B #e6ffcc
+  leaf     g #b1cc7a
+  boneshd  o #998a3d
+  bonedeep w #6e422c
+  bandshd  d #3b2327
+  ink      K #190c1f
+  teal     t #233b3b
+  green    m #2c6e49
+  grasshi  e #4d993d
+  navy     N #294766
+  blue     b #456299
+  lav      l #a3a3cc
+  bandred  r #6e2c2c
+  bandhi   h #995c3d
+  bone     n #ccb17a
+}
+
+sprite skull 32x32 palette=seaflower15 {
+  fill .
+
+  // ---- CRANIUM ----
+  circle 16,15 11 K
+  circle 16,15 10 n
+
+  // cheekbone flares
+  circle 9,21 4 K
+  circle 9,21 3 n
+  circle 23,21 4 K
+  circle 23,21 3 n
+
+  // ---- JAW ----
+  circle 16,28 6 K
+  circle 16,28 5 n
+
+  // ---- BONE SHADING ----
+  circle 12,11 3 B
+  pixel 8,14 B
+  pixel 10,12 B
+  line 25,10 25,19 o
+  line 23,22 25,17 o
+  line 11,25 21,25 o
+  pixel 13,26 B
+  pixel 19,26 B
+
+  // ---- BANDANA ----
+  rect 13,4 19,4 r
+  rect 11,5 21,5 r
+  rect 10,6 22,6 r
+  rect 9,7 23,7 r
+  rect 8,8 24,8 r
+  rect 8,9 24,9 r
+  rect 7,10 25,10 r
+  rect 7,11 25,11 r
+  rect 7,12 25,12 r
+  rect 6,13 25,13 r
+  // band shading
+  line 9,6 13,5 h
+  line 8,8 11,7 h
+  rect 6,13 25,13 d
+  rect 7,12 10,12 d
+  // polka dots
+  pixel 12,8 B
+  pixel 18,7 B
+  pixel 22,10 B
+  pixel 15,11 n
+  pixel 9,11 n
+  // knot + tails (left)
+  circle 5,15 3 r
+  pixel 4,14 h
+  line 4,18 1,27 r
+  line 6,18 3,28 r
+  line 2,19 1,25 d
+  line 6,16 2,21 h
+  pixel 2,29 d
+
+  // ---- FEATURES (top layer) ----
+  // eye sockets
+  circle 11,17 4 o
+  circle 21,17 4 o
+  circle 11,17 3 K
+  circle 21,17 3 K
+  // brow line
+  line 7,13 13,13 o
+  line 19,13 25,13 o
+  // eye glints
+  pixel 12,15 n
+  pixel 22,15 n
+
+  // nose cavity (inverted triangle)
+  line 16,19 16,20 K
+  line 15,21 17,21 K
+  line 15,22 17,22 K
+  line 14,23 18,23 K
+  pixel 13,23 o
+  pixel 19,23 o
+
+  // grin of teeth
+  rect 8,24 24,30 n          // bone block under the bite
+  line 8,23 24,23 K          // bite line
+  rect 8,24 24,24 d          // shadow below the bite
+  line 9,24 9,30 K           // tooth gaps
+  line 12,24 12,30 K
+  line 15,24 15,30 K
+  line 18,24 18,30 K
+  line 21,24 21,30 K
+  line 24,24 24,30 K
+  line 10,29 23,29 o         // gum-line shade
+  rect 9,31 23,31 K          // jaw underside
+  pixel 14,30 B
+  pixel 19,30 B
+}

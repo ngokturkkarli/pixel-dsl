@@ -1,3 +1,10 @@
 node_modules
 dist
 *.tsbuildinfo
+
+# generated sprite output at the repo root (examples/ keep their own)
+/*.png
+
+# vitepress build cache
+docs/.vitepress/cache
+docs/.vitepress/dist

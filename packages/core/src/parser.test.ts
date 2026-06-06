@@ -17,7 +17,6 @@ describe("Parser", () => {
 		expect(cst.name).toBe("program");
 		expect(cst.children.paletteDecl).toHaveLength(1);
 		expect(cst.children.spriteDecl).toBeUndefined();
-		expect(cst.children.invocation).toBeUndefined();
 	});
 
 	it("parses a sprite declaration with compact grid", () => {
@@ -26,16 +25,15 @@ describe("Parser", () => {
 		expect(cst.children.spriteDecl).toHaveLength(1);
 	});
 
-	it("parses a sprite with params and palette attribute", () => {
-		const source = "sprite hero(skin=s, hair=h) 8x8 palette=nes { . }";
+	it("parses a sprite with a palette attribute", () => {
+		const source = "sprite hero 8x8 palette=nes { . }";
 		const { errors } = parseProgram(source);
 		expect(errors).toEqual([]);
 	});
 
-	it("parses an invocation with mixed ref and hex args", () => {
-		const { cst, errors } = parseProgram("hero(skin=light, hair=#222)");
+	it("parses a flip op in a sprite body", () => {
+		const { errors } = parseProgram("sprite hero 4x4 { fill k flip h }");
 		expect(errors).toEqual([]);
-		expect(cst.children.invocation).toHaveLength(1);
 	});
 
 	it("parses an empty program", () => {
@@ -44,17 +42,15 @@ describe("Parser", () => {
 		expect(cst.children).toEqual({});
 	});
 
-	it("parses mixed top-level declarations and invocations", () => {
+	it("parses mixed top-level declarations", () => {
 		const source = `
       palette nes { black k #000 }
       sprite hero 1x1 { k }
-      hero(skin=#111)
     `;
 		const { cst, errors } = parseProgram(source);
 		expect(errors).toEqual([]);
 		expect(cst.children.paletteDecl).toHaveLength(1);
 		expect(cst.children.spriteDecl).toHaveLength(1);
-		expect(cst.children.invocation).toHaveLength(1);
 	});
 
 	it("reports a parse error for a missing closing brace", () => {
@@ -64,8 +60,8 @@ describe("Parser", () => {
 		expect(errors[0].name).toBeTruthy();
 	});
 
-	it("reports a parse error for a missing `=` in a param", () => {
-		const { errors } = parseProgram("hero(skin #222)");
+	it("reports a parse error for a sprite missing dimensions", () => {
+		const { errors } = parseProgram("sprite hero { k }");
 		expect(errors.length).toBeGreaterThan(0);
 	});
 });

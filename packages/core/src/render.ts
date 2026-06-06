@@ -1,6 +1,7 @@
 import { PNG } from "pngjs";
 import type {
 	Cell,
+	FlipOp,
 	Location,
 	OpValue,
 	Program,
@@ -227,6 +228,49 @@ function opDiagnostic(
 	};
 }
 
+function applyFlip(
+	pixels: Rgba[],
+	width: number,
+	height: number,
+	op: FlipOp,
+	sprite: SpriteDecl,
+) {
+	if (op.axis !== "h" && op.axis !== "v") {
+		throw new RenderError(
+			`flip axis must be \`h\` or \`v\` (got \`${op.axis}\`).`,
+			{
+				...opDiagnostic(
+					"render.bad_axis",
+					`invalid flip axis \`${op.axis}\`.`,
+					op.loc,
+					sprite.name,
+				),
+				hint: "Use `flip h` (mirror left↔right) or `flip v` (mirror top↔bottom).",
+			},
+		);
+	}
+	const swap = (a: number, b: number) => {
+		const tmp = pixels[a];
+		pixels[a] = pixels[b];
+		pixels[b] = tmp;
+	};
+	if (op.axis === "h") {
+		const half = Math.floor(width / 2);
+		for (let y = 0; y < height; y++) {
+			for (let x = 0; x < half; x++) {
+				swap(y * width + x, y * width + (width - 1 - x));
+			}
+		}
+	} else {
+		const half = Math.floor(height / 2);
+		for (let y = 0; y < half; y++) {
+			for (let x = 0; x < width; x++) {
+				swap(y * width + x, (height - 1 - y) * width + x);
+			}
+		}
+	}
+}
+
 function renderOps(
 	sprite: SpriteDecl,
 	palette: ResolvedPalette | undefined,
@@ -234,6 +278,10 @@ function renderOps(
 	const pixels: Rgba[] = new Array(sprite.width * sprite.height);
 	for (let i = 0; i < pixels.length; i++) pixels[i] = TRANSPARENT;
 	for (const op of sprite.ops) {
+		if (op.type === "FlipOp") {
+			applyFlip(pixels, sprite.width, sprite.height, op, sprite);
+			continue;
+		}
 		const color = resolveOpValue(op.value, palette, sprite.name);
 		applyOp(pixels, sprite.width, sprite.height, op, color, sprite);
 	}

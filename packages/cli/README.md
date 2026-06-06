@@ -1,6 +1,14 @@
-# CLI usage
+# @pixel-dsl/cli
 
-## Commands
+Command-line compiler for [Pixel-DSL](https://github.com/msyavuz/pixel-dsl). Turns `.pix` sources into PNG sprites.
+
+## Install
+
+```bash
+npm install -g @pixel-dsl/cli
+```
+
+## Usage
 
 ```bash
 pixel-dsl build <input.pix> -o <output.png> [options]
@@ -15,14 +23,6 @@ pixel-dsl build <input.pix> -o <output.png> [options]
 | `--sprite <name>` | sprite to render when the file declares multiple | first sprite |
 | `-w, --watch` | rebuild whenever the input file changes (runs until interrupted) | off |
 
-### Exit codes
-
-| Code | Meaning |
-|---|---|
-| `0` | Success — PNG written |
-| `1` | Compile/render error — diagnostic on stderr |
-| `2` | Bad CLI flag |
-
 ### Examples
 
 ```bash
@@ -31,6 +31,14 @@ pixel-dsl build sheet.pix --sprite enemy -o enemy.png --scale 4
 pixel-dsl build hero.pix -o hero.png --scale 16 --watch
 ```
 
+### Exit codes
+
+| Code | Meaning |
+|---|---|
+| `0` | Success — PNG written |
+| `1` | Compile/render error — diagnostic on stderr |
+| `2` | Bad CLI flag |
+
 ### Diagnostic format
 
 ```
@@ -38,4 +46,8 @@ pixel-dsl build hero.pix -o hero.png --scale 16 --watch
   hint: <optional hint>
 ```
 
-This format is stable — safe to parse from scripts.
+This format is stable and safe to parse from scripts.
+
+## License
+
+ISC

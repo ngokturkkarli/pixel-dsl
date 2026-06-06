@@ -185,5 +185,30 @@ describe("render", () => {
 				expect((e as RenderError).diagnostic.code).toBe("render.mixed_body");
 			}
 		});
+
+		it("mirrors the canvas left↔right with `flip h`", () => {
+			const ast = programOf("sprite x 2x1 { fill . pixel 0,0 #ff0000 flip h }");
+			const png = decodePNG(render(ast));
+			// pixel painted at x=0 should now be at x=1
+			expect(pixelAt(png.data, 2, 0, 0)).toEqual([0, 0, 0, 0]);
+			expect(pixelAt(png.data, 2, 1, 0)).toEqual([255, 0, 0, 255]);
+		});
+
+		it("mirrors the canvas top↔bottom with `flip v`", () => {
+			const ast = programOf("sprite x 1x2 { fill . pixel 0,0 #00ff00 flip v }");
+			const png = decodePNG(render(ast));
+			expect(pixelAt(png.data, 1, 0, 0)).toEqual([0, 0, 0, 0]);
+			expect(pixelAt(png.data, 1, 0, 1)).toEqual([0, 255, 0, 255]);
+		});
+
+		it("throws RenderError for an invalid flip axis", () => {
+			const ast = programOf("sprite x 2x2 { fill . flip z }");
+			try {
+				render(ast);
+				throw new Error("expected throw");
+			} catch (e) {
+				expect((e as RenderError).diagnostic.code).toBe("render.bad_axis");
+			}
+		});
 	});
 });

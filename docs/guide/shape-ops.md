@@ -59,6 +59,20 @@ sprite sun 32x32 {
 }
 ```
 
+## `flip h` / `flip v`
+
+Mirror everything drawn so far. `flip h` mirrors left↔right, `flip v` mirrors top↔bottom. Because flips apply to the accumulated canvas, you can draw one half of a symmetric sprite, mirror it, then keep drawing.
+
+```pix
+sprite face 16x16 {
+  fill .
+  pixel 4,5 #000   // left eye
+  rect 2,2 6,3 #444 // left brow
+  flip h            // mirror the left half onto the right
+  pixel 8,12 #b00   // mouth — drawn after the flip, stays centered
+}
+```
+
 ## Order matters
 
 ```pix

@@ -1,0 +1,38 @@
+{
+	"name": "pix",
+	"scopeName": "source.pix",
+	"patterns": [
+		{ "include": "#comment" },
+		{ "include": "#keyword" },
+		{ "include": "#hex" },
+		{ "include": "#dimensions" },
+		{ "include": "#number" },
+		{ "include": "#transparent" }
+	],
+	"repository": {
+		"comment": {
+			"match": "//.*$",
+			"name": "comment.line.double-slash.pix"
+		},
+		"keyword": {
+			"match": "\\b(palette|sprite|fill|rect|pixel|line|circle|flip)\\b",
+			"name": "keyword.control.pix"
+		},
+		"hex": {
+			"match": "#[0-9a-fA-F]{3,8}\\b",
+			"name": "constant.other.color.pix"
+		},
+		"dimensions": {
+			"match": "\\b\\d+x\\d+\\b",
+			"name": "constant.numeric.dimensions.pix"
+		},
+		"number": {
+			"match": "\\b\\d+\\b",
+			"name": "constant.numeric.pix"
+		},
+		"transparent": {
+			"match": "(?<=\\s)\\.(?=\\s|$)",
+			"name": "constant.language.transparent.pix"
+		}
+	}
+}

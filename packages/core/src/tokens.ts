@@ -74,14 +74,18 @@ export const Circle = createToken({
 	longer_alt: Identifier,
 });
 
+export const Flip = createToken({
+	name: "Flip",
+	pattern: /flip/,
+	longer_alt: Identifier,
+});
+
 export const Dot = createToken({ name: "Dot", pattern: /\./ });
 
 export const Slash = createToken({ name: "Slash", pattern: /\// });
 
 export const LBrace = createToken({ name: "LBrace", pattern: /\{/ });
 export const RBrace = createToken({ name: "RBrace", pattern: /\}/ });
-export const LParen = createToken({ name: "LParen", pattern: /\(/ });
-export const RParen = createToken({ name: "RParen", pattern: /\)/ });
 export const Equals = createToken({ name: "Equals", pattern: /=/ });
 export const Comma = createToken({ name: "Comma", pattern: /,/ });
 
@@ -98,13 +102,12 @@ export const allTokens = [
 	Pixel,
 	Line,
 	Circle,
+	Flip,
 	Identifier,
 	Dot,
 	Slash,
 	LBrace,
 	RBrace,
-	LParen,
-	RParen,
 	Equals,
 	Comma,
 ];

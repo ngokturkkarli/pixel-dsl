@@ -4,7 +4,7 @@ This page is the entire surface of Pixel-DSL. It is intentionally small so it ca
 
 ## Top-level program
 
-A program is a sequence of palette declarations, sprite declarations, and sprite invocations. They can appear in any order.
+A program is a sequence of palette declarations and sprite declarations. They can appear in any order.
 
 ## Palette declaration
 
@@ -26,12 +26,10 @@ Duplicate `SHORT` or `LONG` within a palette is an error; so is an invalid hex l
 ## Sprite declaration
 
 ```pix
-sprite NAME [(PARAMS)] WxH [palette=PNAME] {
+sprite NAME WxH [palette=PNAME] {
   <body>
 }
 ```
-
-`PARAMS` (optional): comma-separated `name=default` pairs, where each `default` is a palette short or a `#hex`. (Param substitution is reserved for future work; current renderer ignores params.)
 
 `WxH`: integer width × height, e.g. `8x8`, `64x40`.
 
@@ -61,6 +59,7 @@ rect X,Y X,Y V
 pixel X,Y V
 line X,Y X,Y V
 circle CX,CY R V
+flip h | flip v
 ```
 
 Where `V` is the same value form as a cell (`identifier`, `#hex`, or `.`).
@@ -72,6 +71,7 @@ Where `V` is the same value form as a cell (`identifier`, `#hex`, or `.`).
 | `pixel x,y V` | Set a single pixel |
 | `line x0,y0 x1,y1 V` | Bresenham line, 1px thick |
 | `circle cx,cy r V` | Filled disc of radius `r` |
+| `flip h` / `flip v` | Mirror everything drawn so far, left↔right (`h`) or top↔bottom (`v`) |
 
 ## Comments
 

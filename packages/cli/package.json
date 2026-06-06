@@ -1,7 +1,29 @@
 {
 	"name": "@pixel-dsl/cli",
-	"version": "1.0.0",
-	"description": "Command-line interface for Pixel-DSL",
+	"version": "0.1.0",
+	"description": "Command-line interface for Pixel-DSL — compile .pix sources to PNG sprites.",
+	"keywords": [
+		"pixel-art",
+		"sprite",
+		"dsl",
+		"cli",
+		"png",
+		"llm"
+	],
+	"author": "msyavuz <salih.yavuz@proton.me>",
+	"license": "ISC",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/msyavuz/pixel-dsl.git",
+		"directory": "packages/cli"
+	},
+	"homepage": "https://github.com/msyavuz/pixel-dsl#readme",
+	"bugs": {
+		"url": "https://github.com/msyavuz/pixel-dsl/issues"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
 	"type": "module",
 	"bin": {
 		"pixel-dsl": "./dist/index.js"

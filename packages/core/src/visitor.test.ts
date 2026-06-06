@@ -32,7 +32,6 @@ describe("Visitor (source → AST)", () => {
 				},
 			],
 			sprites: [],
-			invocations: [],
 		});
 	});
 
@@ -43,7 +42,6 @@ describe("Visitor (source → AST)", () => {
 		expect(sprite.name).toBe("hero");
 		expect(sprite.width).toBe(2);
 		expect(sprite.height).toBe(2);
-		expect(sprite.params).toEqual([]);
 		expect(sprite.palette).toBeUndefined();
 		expect(sprite.cells).toEqual([
 			{ type: "PaletteRef", name: "k", loc: { line: 1, col: 19 } },
@@ -53,53 +51,21 @@ describe("Visitor (source → AST)", () => {
 		]);
 	});
 
-	it("builds a sprite with params and palette attribute", () => {
-		const ast = parseOk("sprite hero(skin=s, hair=#222) 1x1 palette=nes { s }");
+	it("builds a sprite with a palette attribute", () => {
+		const ast = parseOk("sprite hero 1x1 palette=nes { s }");
 		const sprite = ast.sprites[0];
 		expect(sprite.palette).toBe("nes");
-		expect(sprite.params).toEqual([
-			{
-				type: "SpriteParam",
-				name: "skin",
-				default: { type: "PaletteRef", name: "s", loc: { line: 1, col: 18 } },
-				loc: { line: 1, col: 13 },
-			},
-			{
-				type: "SpriteParam",
-				name: "hair",
-				default: { type: "HexValue", hex: "#222", loc: { line: 1, col: 26 } },
-				loc: { line: 1, col: 21 },
-			},
-		]);
 	});
 
-	it("builds an invocation with mixed ref and hex args", () => {
-		const ast = parseOk("hero(skin=light, hair=#222)");
-		expect(ast.invocations).toEqual([
-			{
-				type: "Invocation",
-				name: "hero",
-				args: [
-					{
-						type: "InvocationArg",
-						name: "skin",
-						value: {
-							type: "PaletteRef",
-							name: "light",
-							loc: { line: 1, col: 11 },
-						},
-						loc: { line: 1, col: 6 },
-					},
-					{
-						type: "InvocationArg",
-						name: "hair",
-						value: { type: "HexValue", hex: "#222", loc: { line: 1, col: 23 } },
-						loc: { line: 1, col: 18 },
-					},
-				],
-				loc: { line: 1, col: 1 },
-			},
-		]);
+	it("builds a flip op", () => {
+		const ast = parseOk("sprite hero 4x4 { fill k flip h }");
+		const s = ast.sprites[0];
+		expect(s.ops).toHaveLength(2);
+		expect(s.ops[1]).toEqual({
+			type: "FlipOp",
+			axis: "h",
+			loc: { line: 1, col: 26 },
+		});
 	});
 
 	it("builds an empty Program for empty input", () => {
@@ -109,7 +75,6 @@ describe("Visitor (source → AST)", () => {
 			type: "Program",
 			palettes: [],
 			sprites: [],
-			invocations: [],
 		});
 	});
 

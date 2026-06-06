@@ -1,0 +1,223 @@
+// Pirate galleon — a three-masted ship at sea, authored with shape ops.
+// 96x72. Layer order: sky -> sun/clouds -> rigging -> masts -> yards ->
+// sails -> hull -> hull details -> flag -> sea foam.
+
+palette pirate {
+  sky    s #aadcf5
+  skylo  S #7fc0e8
+  sun    y #ffd95a
+  sunhi  L #fff3b0
+  white  w #ffffff
+  cloud  C #d8e6f0
+  sail   c #f3e3bf
+  sailhi v #fff6df
+  sailmd M #c9a978
+  saildk g #8a6a3d
+  masthi u #8a5a2c
+  mast   o #6b3f1d
+  mastdk e #3a2110
+  rope   E #2a1810
+  hullhi H #a05f2e
+  hull   h #7a4220
+  hulldk d #4a2812
+  hulldp D #2a1408
+  goldhi q #e8b840
+  gold   Q #9c7820
+  red    r #c0392b
+  black  K #0a0503
+  sea    b #2a6dba
+  sealo  n #16518f
+  seadp  N #0c2f5e
+  foam   f #cdeafd
+}
+
+sprite ship 96x72 palette=pirate {
+  // ---------------- SKY ----------------
+  fill s
+  rect 0,30 95,47 S
+
+  // sun (upper-left) with rays
+  circle 14,12 6 Q
+  circle 14,12 5 y
+  circle 14,12 2 L
+  pixel 14,3 y
+  pixel 14,21 y
+  pixel 5,12 y
+  pixel 23,12 y
+  pixel 8,6 y
+  pixel 20,18 y
+  pixel 20,6 y
+  pixel 8,18 y
+
+  // clouds (kept clear of the flag at the mainmast top)
+  rect 70,8 84,10 w
+  rect 72,7 82,7 w
+  rect 73,11 81,11 C
+  pixel 69,9 w
+  pixel 85,9 w
+  rect 78,18 88,19 w
+  rect 80,17 86,17 w
+  pixel 77,18 C
+  pixel 89,18 C
+
+  // ---------------- RIGGING (behind sails) ----------------
+  line 48,5 28,44 E
+  line 48,5 68,44 E
+  line 28,12 16,44 E
+  line 68,14 80,44 E
+  line 28,12 82,42 E
+
+  // ---------------- MASTS ----------------
+  // mainmast (center, tallest)
+  rect 47,5 48,46 o
+  pixel 47,5 u
+  pixel 47,20 u
+  pixel 47,34 u
+  // foremast (left)
+  rect 27,12 28,46 o
+  pixel 27,12 u
+  pixel 27,30 u
+  // mizzenmast (right)
+  rect 67,14 68,46 o
+  pixel 67,14 u
+  pixel 67,32 u
+
+  // ---------------- YARDS (cross beams) ----------------
+  line 41,11 56,11 e
+  line 35,25 61,25 e
+  line 21,17 35,17 e
+  line 17,29 39,29 e
+  line 61,19 77,19 e
+  line 57,31 79,31 e
+
+  // ---------------- SAILS ----------------
+  // main topsail
+  rect 43,12 56,21 c
+  line 43,12 56,12 v
+  rect 43,12 43,21 g
+  rect 56,12 56,21 M
+  rect 44,20 55,21 M
+  // mainsail (course)
+  rect 41,26 59,40 c
+  line 41,26 59,26 v
+  rect 41,26 41,40 g
+  rect 59,26 59,40 M
+  rect 42,38 58,40 M
+  pixel 50,33 v
+
+  // fore topsail
+  rect 22,18 34,26 c
+  line 22,18 34,18 v
+  rect 22,18 22,26 g
+  rect 34,18 34,26 M
+  // fore course
+  rect 18,30 38,42 c
+  line 18,30 38,30 v
+  rect 18,30 18,42 g
+  rect 38,30 38,42 M
+  rect 19,41 37,42 M
+
+  // mizzen topsail
+  rect 62,20 76,27 c
+  line 62,20 76,20 v
+  rect 62,20 62,27 g
+  rect 76,20 76,27 M
+  // mizzen course
+  rect 58,32 78,43 c
+  line 58,32 78,32 v
+  rect 58,32 58,43 g
+  rect 78,32 78,43 M
+  rect 59,42 77,43 M
+
+  // ---------------- HULL ----------------
+  // stern castle (raised, left)
+  rect 12,38 24,46 h
+  rect 12,38 24,38 d
+  rect 12,39 24,39 H
+  rect 14,41 16,43 q
+  rect 18,41 20,43 q
+  pixel 15,42 K
+  pixel 19,42 K
+  // bow rise (right)
+  rect 74,40 82,46 h
+  rect 74,40 82,40 d
+  rect 74,41 82,41 H
+
+  // main hull body
+  rect 12,46 82,54 h
+  line 12,46 82,46 H
+  // keel taper
+  rect 16,55 78,55 h
+  rect 21,56 73,56 d
+  rect 28,57 66,57 d
+  rect 36,58 58,58 D
+  line 16,55 78,55 d
+
+  // gold trim stripe
+  rect 12,47 82,48 q
+  rect 12,49 82,49 Q
+  // gunports
+  rect 18,50 19,52 K
+  rect 26,50 27,52 K
+  rect 34,50 35,52 K
+  rect 42,50 43,52 K
+  rect 50,50 51,52 K
+  rect 58,50 59,52 K
+  rect 66,50 67,52 K
+  rect 74,50 75,52 K
+  line 12,53 82,53 d
+  line 12,54 82,54 D
+
+  // bowsprit + jib
+  line 82,44 94,37 o
+  line 83,45 95,38 u
+  rect 84,41 90,42 c
+  rect 87,38 92,39 c
+  line 92,38 92,42 g
+
+  // ---------------- JOLLY ROGER FLAG ----------------
+  rect 49,5 63,11 K
+  pixel 64,6 K
+  pixel 64,9 K
+  // skull
+  rect 53,6 58,8 w
+  rect 54,9 57,9 w
+  pixel 54,7 K
+  pixel 57,7 K
+  pixel 55,9 K
+  pixel 56,9 K
+  // crossbones
+  line 51,6 60,11 w
+  line 60,6 51,11 w
+
+  // crow's nest on mainmast
+  rect 45,9 50,10 h
+  rect 45,9 50,9 d
+  pixel 45,8 d
+  pixel 50,8 d
+
+  // ---------------- SEA ----------------
+  // (drawn AFTER sky but the hull above already covers its overlap; here we
+  // only paint the open water that sits below/around the hull)
+  rect 0,55 11,71 b
+  rect 83,55 95,71 b
+  rect 0,59 95,71 b
+  rect 0,64 95,71 n
+  rect 0,68 95,71 N
+  // waterline foam hugging the hull base
+  rect 9,55 16,55 f
+  rect 78,55 86,55 f
+  line 0,58 95,58 f
+  line 0,59 95,59 w
+  // wave caps
+  rect 4,61 9,61 f
+  rect 20,62 26,62 f
+  rect 40,61 46,61 f
+  rect 60,62 66,62 f
+  rect 80,61 87,61 f
+  pixel 14,65 f
+  pixel 34,66 f
+  pixel 54,65 f
+  pixel 74,66 f
+  pixel 90,65 f
+}
