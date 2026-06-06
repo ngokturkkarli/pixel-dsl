@@ -1,0 +1,49 @@
+{
+	"name": "@pixel-dsl/lsp",
+	"version": "0.1.0",
+	"description": "Language server for Pixel-DSL — diagnostics, hover, and completion, powered by @pixel-dsl/core.",
+	"keywords": [
+		"pixel-dsl",
+		"lsp",
+		"language-server",
+		"diagnostics",
+		"pixel-art"
+	],
+	"author": "msyavuz <salih.yavuz@proton.me>",
+	"license": "ISC",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/msyavuz/pixel-dsl.git",
+		"directory": "packages/lsp"
+	},
+	"homepage": "https://github.com/msyavuz/pixel-dsl#readme",
+	"bugs": {
+		"url": "https://github.com/msyavuz/pixel-dsl/issues"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"type": "module",
+	"bin": {
+		"pixel-dsl-lsp": "./dist/server.js"
+	},
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"build": "tsc -b && chmod +x dist/server.js",
+		"dev": "tsx src/server.ts",
+		"test": "vitest",
+		"typecheck": "tsc -b",
+		"lint": "biome lint --write",
+		"format": "biome check --write"
+	},
+	"dependencies": {
+		"@pixel-dsl/core": "workspace:*",
+		"vscode-languageserver": "^9.0.1",
+		"vscode-languageserver-textdocument": "^1.0.12"
+	},
+	"devDependencies": {
+		"@types/node": "^25.7.0"
+	}
+}
