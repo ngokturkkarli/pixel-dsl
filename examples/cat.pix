@@ -1,0 +1,43 @@
+// A sitting cat, front view. Built from centered shapes (inherently
+// symmetric) plus mirrored pairs for the ears and eyes.
+palette cat {
+  fur    f #6f6f78
+  dark   d #4c4c55
+  pink   p #e89aa6
+  eye    e #b6e34a
+  black  k #2b2b30
+  white  w #ffffff
+}
+
+sprite cat 32x32 palette=cat {
+  fill .
+  // ears (mirrored pair around the centre)
+  line 8,2 8,10 f
+  line 8,2 13,9 f
+  rect 8,8 13,10 f
+  line 23,2 23,10 f
+  line 23,2 18,9 f
+  rect 18,8 23,10 f
+  pixel 10,6 p
+  pixel 21,6 p
+  // head + body (centered → symmetric)
+  circle 16,13 8 f
+  circle 16,26 9 f
+  rect 7,25 24,31 f
+  // chest tuft
+  circle 16,27 3 w
+  // shaded base
+  rect 7,30 24,31 d
+  // eyes
+  circle 12,13 1 e
+  circle 19,13 1 e
+  pixel 12,13 k
+  pixel 19,13 k
+  // nose + mouth
+  pixel 16,16 p
+  pixel 15,17 d
+  pixel 17,17 d
+  // tail
+  line 24,31 29,25 d
+  line 25,31 29,26 f
+}

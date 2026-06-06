@@ -1,0 +1,28 @@
+// A shiny gold coin — concentric circles plus a star emblem.
+palette coin {
+  rim    d #b07a16
+  gold   g #f4c542
+  light  l #ffe9a3
+  star   s #c8941f
+}
+
+sprite coin 16x16 palette=coin {
+  fill .
+  circle 8,8 7 d     // dark rim
+  circle 8,8 6 g     // gold face
+  circle 8,8 5 d     // inset ring
+  circle 8,8 4 g     // raised center
+  // upper-left shine
+  pixel 5,4 l
+  pixel 4,5 l
+  pixel 6,4 l
+  pixel 4,6 l
+  // star emblem
+  pixel 8,5 s
+  pixel 8,11 s
+  pixel 5,8 s
+  pixel 11,8 s
+  pixel 8,8 s
+  line 6,6 10,10 s
+  line 10,6 6,10 s
+}

@@ -1,0 +1,32 @@
+// A round-bottomed potion flask with glowing liquid.
+palette potion {
+  glass  c #cfe9ff
+  edge   e #8fbce0
+  liquid p #c14fd8
+  glow   m #e79bf2
+  cork   k #8a5a2b
+  shine  w #ffffff
+}
+
+sprite potion 16x16 palette=potion {
+  fill .
+  // cork
+  rect 6,1 9,2 k
+  // neck
+  rect 6,3 9,5 c
+  rect 6,3 6,5 e
+  // round flask body
+  circle 8,10 5 c
+  circle 8,10 5 e
+  circle 8,10 4 c
+  // liquid
+  circle 8,11 4 p
+  rect 4,11 12,11 p
+  // bubbles + surface glow
+  pixel 7,9 m
+  pixel 10,12 m
+  pixel 6,13 m
+  // glass shine
+  pixel 5,9 w
+  pixel 5,10 w
+}

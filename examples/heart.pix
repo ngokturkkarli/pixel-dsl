@@ -1,0 +1,36 @@
+// A classic pixel heart — rounded lobes built row-by-row, a darker
+// lower-right edge for depth, and a white glint.
+palette heart {
+  red    r #e8443a
+  dark   d #b22b2f
+  shine  w #ffd2cf
+}
+
+sprite heart 16x16 palette=heart {
+  fill .
+  // lobes + dip
+  rect 4,2 5,2 r
+  rect 10,2 11,2 r
+  rect 3,3 6,3 r
+  rect 9,3 12,3 r
+  rect 2,4 13,4 r
+  // widest band
+  rect 1,5 14,7 r
+  // narrowing to the point
+  rect 2,8 13,8 r
+  rect 3,9 12,9 r
+  rect 4,10 11,10 r
+  rect 5,11 10,11 r
+  rect 6,12 9,12 r
+  rect 7,13 8,13 r
+  // darker lower-right edge
+  pixel 13,8 d
+  pixel 12,9 d
+  pixel 11,10 d
+  pixel 10,11 d
+  pixel 9,12 d
+  pixel 8,13 d
+  // glint
+  rect 3,5 4,6 w
+  pixel 4,4 w
+}
