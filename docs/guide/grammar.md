@@ -62,7 +62,7 @@ circle CX,CY R V
 flip h | flip v
 ```
 
-Where `V` is the same value form as a cell (`identifier`, `#hex`, or `.`).
+Where `V` is the same value form as a cell (`identifier`, `#hex`, or `.`). The base canvas is fully transparent; `.` paints transparency, so it also *erases* a region back to clear.
 
 | Op | Effect |
 |---|---|
@@ -71,7 +71,7 @@ Where `V` is the same value form as a cell (`identifier`, `#hex`, or `.`).
 | `pixel x,y V` | Set a single pixel |
 | `line x0,y0 x1,y1 V` | Bresenham line, 1px thick |
 | `circle cx,cy r V` | Filled disc of radius `r` |
-| `flip h` / `flip v` | Mirror everything drawn so far, left↔right (`h`) or top↔bottom (`v`) |
+| `flip h` / `flip v` | Reflect the whole canvas left↔right (`h`) or top↔bottom (`v`) — re-orients, does not symmetrize |
 
 ## Comments
 

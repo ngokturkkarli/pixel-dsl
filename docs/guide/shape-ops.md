@@ -61,17 +61,39 @@ sprite sun 32x32 {
 
 ## `flip h` / `flip v`
 
-Mirror everything drawn so far. `flip h` mirrors left↔right, `flip v` mirrors top↔bottom. Because flips apply to the accumulated canvas, you can draw one half of a symmetric sprite, mirror it, then keep drawing.
+Reflect the **entire canvas** in place, at the point the op runs. `flip h` mirrors left↔right (`x → W-1-x`); `flip v` mirrors top↔bottom (`y → H-1-y`). The axis must be `h` or `v`.
+
+Because it reflects everything drawn so far, `flip` is for **re-orienting** a finished sprite — not for building symmetry. Drawing one half and `flip h` *moves* that half to the other side and leaves the original side blank. For a symmetric sprite, draw both sides instead (centered `circle`/`rect` shapes are already symmetric).
 
 ```pix
-sprite face 16x16 {
+sprite arrow 8x8 {
   fill .
-  pixel 4,5 #000   // left eye
-  rect 2,2 6,3 #444 // left brow
-  flip h            // mirror the left half onto the right
-  pixel 8,12 #b00   // mouth — drawn after the flip, stays centered
+  line 1,4 6,4 #fff   // shaft
+  line 3,1 6,4 #fff   // upper barb
+  line 3,7 6,4 #fff   // lower barb — arrow pointing right
+  flip h              // whole canvas mirrored → now points left
 }
 ```
+
+## Transparency
+
+The canvas starts **fully transparent** and the PNG is written as RGBA, so anything you don't paint stays see-through. Three ways to work with it:
+
+- **Leave it unpainted.** In ops mode the base is already clear, so `fill .` is optional — it's just an explicit way to say "transparent background." Paint your shapes and the surrounding pixels stay transparent.
+- **`.` is the transparent value.** As a cell it's a clear pixel; as an op value it *erases* a region back to transparent — handy for carving shapes:
+
+  ```pix
+  sprite ring 16x16 {
+    circle 8,8 7 #2a9d8f   // solid disc
+    circle 8,8 4 .         // punch a transparent hole → a ring
+  }
+  ```
+
+- **Alpha in hex** — `#rgba` or `#rrggbbaa`. `#00000000` is fully transparent; partial alpha tints what's beneath:
+
+  ```pix
+  rect 0,0 15,15 #00000080   // 50%-opacity black wash
+  ```
 
 ## Order matters
 
