@@ -5,6 +5,7 @@
 	"type": "module",
 	"scripts": {
 		"dev": "vitepress dev",
+		"prebuild": "bash ../scripts/sync-branding.sh",
 		"build": "vitepress build",
 		"preview": "vitepress preview",
 		"lint": "biome lint --write",

@@ -1,0 +1,63 @@
+{
+	"Palette declaration": {
+		"prefix": "palette",
+		"body": [
+			"palette ${1:name} {",
+			"  ${2:black} ${3:k} #${4:000000}",
+			"  $0",
+			"}"
+		],
+		"description": "Declare a named color palette"
+	},
+	"Sprite with shape ops": {
+		"prefix": "sprite-ops",
+		"body": [
+			"sprite ${1:name} ${2:16}x${3:16} palette=${4:palette} {",
+			"  fill ${5:k}",
+			"  $0",
+			"}"
+		],
+		"description": "Sprite body using shape operations"
+	},
+	"NES palette": {
+		"prefix": "nes-palette",
+		"body": [
+			"palette nes {",
+			"  black k #000000",
+			"  white w #ffffff",
+			"  red   r #ff3030",
+			"}"
+		],
+		"description": "Example NES-style palette"
+	},
+	"fill op": {
+		"prefix": "fill",
+		"body": "fill ${1:v}",
+		"description": "Fill every pixel"
+	},
+	"rect op": {
+		"prefix": "rect",
+		"body": "rect ${1:x0},${2:y0} ${3:x1},${4:y1} ${5:v}",
+		"description": "Filled rectangle"
+	},
+	"pixel op": {
+		"prefix": "pixel",
+		"body": "pixel ${1:x},${2:y} ${3:v}",
+		"description": "Single pixel"
+	},
+	"line op": {
+		"prefix": "line",
+		"body": "line ${1:x0},${2:y0} ${3:x1},${4:y1} ${5:v}",
+		"description": "Bresenham line"
+	},
+	"circle op": {
+		"prefix": "circle",
+		"body": "circle ${1:cx},${2:cy} ${3:r} ${4:v}",
+		"description": "Filled circle"
+	},
+	"flip op": {
+		"prefix": "flip",
+		"body": "flip ${1|h,v|}",
+		"description": "Mirror canvas"
+	}
+}

@@ -1,5 +1,15 @@
+import { readFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { defineConfig, type UserConfig } from "vitepress";
-import pixGrammar from "./pix.tmLanguage.json";
+
+const here = dirname(fileURLToPath(import.meta.url));
+const pixGrammar = JSON.parse(
+	readFileSync(
+		resolve(here, "../../packages/lang/grammar/pix.tmLanguage.json"),
+		"utf8",
+	),
+);
 
 type PixLang = NonNullable<
 	NonNullable<UserConfig["markdown"]>["languages"]
@@ -8,11 +18,9 @@ type PixLang = NonNullable<
 export default defineConfig({
 	title: "Pixel-DSL",
 	description: "A deterministic, LLM-friendly DSL for pixel art sprites.",
-	// Served at the root of the custom domain https://pixel-dsl.com
 	base: "/",
 	head: [["link", { rel: "icon", type: "image/png", href: "/favicon.png" }]],
 	markdown: {
-		// Register the custom `pix` language so ```pix code blocks highlight.
 		languages: [pixGrammar as unknown as PixLang],
 	},
 	themeConfig: {

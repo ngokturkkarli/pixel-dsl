@@ -1,0 +1,25 @@
+{
+	"name": "@pixel-dsl/lang",
+	"version": "0.1.0",
+	"private": true,
+	"description": "Shared Pixel-DSL language assets — grammar, editor config, snippets.",
+	"type": "module",
+	"exports": {
+		"./grammar": "./grammar/pix.tmLanguage.json",
+		"./language-configuration": "./config/language-configuration.json",
+		"./snippets": "./snippets/pix.json"
+	},
+	"files": [
+		"grammar",
+		"config",
+		"snippets"
+	],
+	"scripts": {
+		"build": "node -e \"process.exit(0)\"",
+		"typecheck": "node -e \"process.exit(0)\"",
+		"test": "node -e \"process.exit(0)\"",
+		"lint": "biome lint --write grammar config snippets",
+		"format": "biome check --write grammar config snippets"
+	},
+	"license": "ISC"
+}
