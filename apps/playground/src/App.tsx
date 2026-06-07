@@ -1,8 +1,7 @@
 import {
+	compilePreview,
 	type Diagnostic,
-	parse,
-	RenderError,
-	renderPixels,
+	formatDiagnosticLine,
 } from "@pixel-dsl/core";
 import { useEffect, useMemo, useRef, useState } from "react";
 
@@ -38,23 +37,10 @@ export function App() {
 	});
 	const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-	const { errors, image, renderErr } = useMemo(() => {
-		const parsed = parse(source);
-		if (!parsed.ast || parsed.errors.length > 0) {
-			return { errors: parsed.errors, image: null, renderErr: null };
-		}
-		try {
-			const img = renderPixels(parsed.ast, { scale: SCALE });
-			return { errors: [], image: img, renderErr: null };
-		} catch (e) {
-			const d = e instanceof RenderError ? e.diagnostic : null;
-			return {
-				errors: [] as Diagnostic[],
-				image: null,
-				renderErr: d ?? (e instanceof Error ? e.message : String(e)),
-			};
-		}
-	}, [source]);
+	const { diagnostics, image } = useMemo(
+		() => compilePreview(source, { scale: SCALE }),
+		[source],
+	);
 
 	useEffect(() => {
 		if (!image || !canvasRef.current) return;
@@ -109,52 +95,24 @@ export function App() {
 				</div>
 				<div className="pane preview">
 					<canvas ref={canvasRef} />
-					<DiagnosticPanel diagnostics={errors} renderErr={renderErr} />
+					<DiagnosticPanel diagnostics={diagnostics} />
 				</div>
 			</div>
 		</div>
 	);
 }
 
-function DiagnosticPanel({
-	diagnostics,
-	renderErr,
-}: {
-	diagnostics: Diagnostic[];
-	renderErr: Diagnostic | string | null;
-}) {
-	if (diagnostics.length === 0 && !renderErr) {
+function DiagnosticPanel({ diagnostics }: { diagnostics: Diagnostic[] }) {
+	if (diagnostics.length === 0) {
 		return <div className="diag ok">OK — sprite compiled.</div>;
 	}
 	return (
 		<ul className="diag err">
 			{diagnostics.map((d) => (
 				<li key={`${d.code}-${d.loc.line}-${d.loc.col}-${d.message}`}>
-					<code>
-						{d.loc.line}:{d.loc.col}
-					</code>{" "}
-					<strong>{d.code}</strong>
-					<span> — {d.message}</span>
-					{d.hint && <div className="hint">hint: {d.hint}</div>}
+					{formatDiagnosticLine(d)}
 				</li>
 			))}
-			{renderErr &&
-				(typeof renderErr === "string" ? (
-					<li>
-						<strong>error</strong> — {renderErr}
-					</li>
-				) : (
-					<li>
-						<code>
-							{renderErr.loc.line}:{renderErr.loc.col}
-						</code>{" "}
-						<strong>{renderErr.code}</strong>
-						<span> — {renderErr.message}</span>
-						{renderErr.hint && (
-							<div className="hint">hint: {renderErr.hint}</div>
-						)}
-					</li>
-				))}
 		</ul>
 	);
 }

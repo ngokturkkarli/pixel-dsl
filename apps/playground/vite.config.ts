@@ -13,7 +13,7 @@ export default defineConfig(({ command }) => ({
 	resolve: {
 		alias: {
 			"@pixel-dsl/core": resolve(here, "../../packages/core/src/index.ts"),
-			pngjs: resolve(here, "src/pngjs-stub.ts"),
+			pngjs: resolve(here, "../../packages/core/src/pngjs-stub.ts"),
 		},
 	},
 	optimizeDeps: {
