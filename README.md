@@ -51,6 +51,14 @@ npm install -g @pixel-dsl/cli
 pixel-dsl build hero.pix -o hero.png --scale 16
 ```
 
+### Use with Claude Code
+
+The CLI bundles a [Claude Code](https://claude.com/claude-code) skill so Claude can author `.pix` sprites for you. Install it once:
+
+```bash
+pixel-dsl skill install   # → ~/.claude/skills/pixel-dsl/SKILL.md
+```
+
 Or use the renderer programmatically:
 
 ```bash
@@ -92,6 +100,18 @@ pnpm dev:playground   # local playground
 pnpm dev:vscode       # build VS Code extension for F5 debug
 pnpm dev:docs         # local docs site
 ```
+
+### Releasing
+
+Versioning and changelogs are managed with [Changesets](https://github.com/changesets/changesets) (independent per-package SemVer).
+
+- **In a PR that changes a published package** (`core`, `cli`, `lsp`), add a changeset:
+  ```bash
+  pnpm changeset        # pick packages + bump type, write a summary
+  ```
+  Commit the generated `.changeset/*.md` file with your PR. Docs/infra-only PRs don't need one.
+- **On merge to `main`**, the Release workflow opens a "Version Packages" PR that bumps versions and writes per-package `CHANGELOG.md`s.
+- **Merging that PR** publishes the changed packages to npm (Trusted Publishing via OIDC) and tags the release.
 
 ## Documentation
 
