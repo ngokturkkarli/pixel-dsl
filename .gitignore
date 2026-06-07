@@ -2,6 +2,9 @@ node_modules
 dist
 *.tsbuildinfo
 
+# vscode extension build artifacts (copied from packages/lang + assets/branding)
+packages/vscode/staged/
+
 # vitepress build cache
 docs/.vitepress/cache
 docs/.vitepress/dist

@@ -10,7 +10,8 @@
 		"includes": [
 			"**",
 			"!packages/tree-sitter/src",
-			"!packages/tree-sitter/grammar.js"
+			"!packages/tree-sitter/grammar.js",
+			"!packages/vscode/.vscode"
 		]
 	},
 	"formatter": {

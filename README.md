@@ -38,6 +38,11 @@ sprite flag 16x12 palette=nes {
 |---|---|
 | [`@pixel-dsl/core`](packages/core) | Parser + deterministic PNG renderer |
 | [`@pixel-dsl/cli`](packages/cli) | `pixel-dsl` command-line compiler |
+| [`@pixel-dsl/lsp`](packages/lsp) | Language server (diagnostics, hover, completion, format) |
+| [`@pixel-dsl/lang`](packages/lang) | Shared grammar, editor config, and snippets |
+| [`@pixel-dsl/vscode`](packages/vscode) | VS Code / Cursor extension (local dev) |
+| [`@pixel-dsl/playground`](apps/playground) | Browser playground (embedded in docs) |
+| [`@pixel-dsl/docs`](docs) | VitePress documentation site |
 
 ## Install
 
@@ -61,6 +66,18 @@ if (ast) {
 }
 ```
 
+## Assets
+
+| Path | Role |
+|---|---|
+| [`examples/logo.pix`](examples/logo.pix) | Editable logo source |
+| [`assets/branding/`](assets/branding/) | **Canonical** committed PNGs (logo, favicon, file icon) |
+| [`packages/lang/`](packages/lang/) | Shared grammar, editor config, snippets |
+| `docs/public/`, `playground/public/` | Branding copies (synced from `assets/branding/` on build) |
+| `packages/vscode/staged/` | Extension publish bundle (gitignored; built from lang + branding) |
+
+Regenerate branding after editing `logo.pix`: `pnpm render:assets` (then commit `assets/branding/`).
+
 ## Development
 
 This is a pnpm monorepo.
@@ -72,6 +89,7 @@ pnpm test        # run the test suites
 pnpm typecheck
 pnpm lint && pnpm format
 pnpm dev:playground   # local playground
+pnpm dev:vscode       # build VS Code extension for F5 debug
 pnpm dev:docs         # local docs site
 ```
 

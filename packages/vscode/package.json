@@ -1,0 +1,187 @@
+{
+	"name": "@pixel-dsl/vscode",
+	"displayName": "Pixel-DSL",
+	"publisher": "msyavuz",
+	"version": "0.1.0",
+	"private": true,
+	"description": "Language support and live preview for Pixel-DSL (.pix) sprite files.",
+	"license": "ISC",
+	"engines": {
+		"vscode": "^1.85.0"
+	},
+	"categories": [
+		"Programming Languages"
+	],
+	"icon": "staged/branding/logo.png",
+	"main": "./dist/extension.js",
+	"contributes": {
+		"languages": [
+			{
+				"id": "pix",
+				"aliases": [
+					"Pixel-DSL",
+					"pix"
+				],
+				"extensions": [
+					".pix"
+				],
+				"configuration": "./staged/config/language-configuration.json",
+				"icon": {
+					"light": "./staged/branding/file-icon.png",
+					"dark": "./staged/branding/file-icon.png"
+				}
+			}
+		],
+		"grammars": [
+			{
+				"language": "pix",
+				"scopeName": "source.pix",
+				"path": "./staged/grammar/pix.tmLanguage.json"
+			}
+		],
+		"snippets": [
+			{
+				"language": "pix",
+				"path": "./staged/snippets/pix.json"
+			}
+		],
+		"commands": [
+			{
+				"command": "pixel-dsl.build",
+				"title": "Pixel-DSL: Build to PNG",
+				"icon": "$(file-binary)"
+			},
+			{
+				"command": "pixel-dsl.buildAllSprites",
+				"title": "Pixel-DSL: Build All Sprites"
+			},
+			{
+				"command": "pixel-dsl.openPreview",
+				"title": "Pixel-DSL: Open Preview",
+				"icon": "$(open-preview)"
+			},
+			{
+				"command": "pixel-dsl.selectSprite",
+				"title": "Pixel-DSL: Select Sprite"
+			}
+		],
+		"configuration": {
+			"title": "Pixel-DSL",
+			"properties": {
+				"pixel-dsl.scale": {
+					"type": "number",
+					"default": 16,
+					"minimum": 1,
+					"description": "Nearest-neighbor upscale for preview and build."
+				},
+				"pixel-dsl.preview.enabled": {
+					"type": "boolean",
+					"default": true,
+					"description": "Automatically refresh the preview panel on edit."
+				},
+				"pixel-dsl.preview.defaultSprite": {
+					"type": "string",
+					"default": "first",
+					"description": "Sprite to preview ('first' or a sprite name)."
+				},
+				"pixel-dsl.build.outputDirectory": {
+					"type": "string",
+					"default": "",
+					"description": "PNG output directory (empty = same folder as .pix file)."
+				},
+				"pixel-dsl.lsp.trace.server": {
+					"type": "string",
+					"enum": [
+						"off",
+						"messages",
+						"verbose"
+					],
+					"default": "off"
+				},
+				"pixel-dsl.preview.scale": {
+					"type": "number",
+					"default": 0,
+					"minimum": 0,
+					"description": "Preview compile scale (0 = auto, capped at min(build scale, 8)). Build uses pixel-dsl.scale."
+				},
+				"pixel-dsl.preview.debounceMs": {
+					"type": "number",
+					"default": 300,
+					"minimum": 50,
+					"description": "Milliseconds to wait after typing before refreshing the preview."
+				}
+			}
+		},
+		"taskDefinitions": [
+			{
+				"type": "pixel-dsl",
+				"required": [
+					"file"
+				],
+				"properties": {
+					"file": {
+						"type": "string",
+						"description": ".pix source file"
+					},
+					"sprite": {
+						"type": "string"
+					},
+					"scale": {
+						"type": "number",
+						"default": 16
+					}
+				}
+			}
+		],
+		"problemMatchers": [
+			{
+				"name": "pixel-dsl",
+				"owner": "pixel-dsl",
+				"fileLocation": [
+					"relative",
+					"${workspaceFolder}"
+				],
+				"pattern": {
+					"regexp": "^(.+):(\\d+):(\\d+):\\s+(error|warning)\\[([^\\]]+)\\]:\\s+(.+)$",
+					"file": 1,
+					"line": 2,
+					"column": 3,
+					"severity": 4,
+					"code": 5,
+					"message": 6
+				}
+			}
+		],
+		"configurationDefaults": {
+			"[pix]": {
+				"editor.defaultFormatter": "msyavuz.pixel-dsl",
+				"editor.formatOnSave": false
+			}
+		}
+	},
+	"scripts": {
+		"build": "node scripts/build.mjs",
+		"watch": "node scripts/build.mjs --watch",
+		"typecheck": "tsc -p tsconfig.json --noEmit",
+		"test": "vitest",
+		"lint": "biome lint --write",
+		"format": "biome check --write"
+	},
+	"dependencies": {
+		"@pixel-dsl/core": "workspace:*",
+		"@pixel-dsl/lang": "workspace:*",
+		"vscode-languageclient": "^9.0.1"
+	},
+	"devDependencies": {
+		"@types/node": "^25.7.0",
+		"@types/vscode": "^1.85.0",
+		"esbuild": "^0.25.0",
+		"typescript": "^6.0.3",
+		"vitest": "^4.1.6"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/msyavuz/pixel-dsl.git",
+		"directory": "packages/vscode"
+	}
+}
