@@ -1,5 +1,5 @@
 import { readFileSync, writeFileSync } from "node:fs";
-import { type Diagnostic, parse, RenderError, render } from "@pixel-dsl/core";
+import { compilePng, type Diagnostic } from "@pixel-dsl/core";
 import { formatDiagnostics } from "./format.js";
 
 export interface CompileOpts {
@@ -13,22 +13,8 @@ export interface CompileResult {
 }
 
 export function compile(source: string, opts: CompileOpts = {}): CompileResult {
-	const { ast, errors } = parse(source);
-	if (!ast || errors.length > 0) {
-		return { errors };
-	}
-	try {
-		const bytes = render(ast, {
-			scale: opts.scale,
-			spriteName: opts.spriteName,
-		});
-		return { bytes, errors: [] };
-	} catch (e) {
-		if (e instanceof RenderError) {
-			return { errors: [e.diagnostic] };
-		}
-		throw e;
-	}
+	const { bytes, diagnostics } = compilePng(source, opts);
+	return { bytes, errors: diagnostics };
 }
 
 export interface BuildArgs {

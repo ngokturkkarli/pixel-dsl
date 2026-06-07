@@ -36,6 +36,7 @@ export function parse(source: string): {
 
 export type * from "./ast.js";
 export type { Diagnostic } from "./errors.js";
+export { formatSource } from "./format-source.js";
 export {
 	parseHex,
 	type ResolvedPalette,
@@ -43,6 +44,15 @@ export {
 	resolvePalette,
 	resolveProgramPalettes,
 } from "./palette.js";
+export {
+	compilePng,
+	compilePreview,
+	formatDiagnosticLine,
+	type PngCompileResult,
+	type PreviewOpts,
+	type PreviewResult,
+	pickSpriteName,
+} from "./preview.js";
 export {
 	RenderError,
 	type RenderedImage,

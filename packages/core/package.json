@@ -32,6 +32,10 @@
 		".": {
 			"types": "./dist/index.d.ts",
 			"default": "./dist/index.js"
+		},
+		"./pngjs-stub": {
+			"types": "./dist/pngjs-stub.d.ts",
+			"default": "./dist/pngjs-stub.js"
 		}
 	},
 	"files": [
